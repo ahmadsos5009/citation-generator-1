@@ -28,7 +28,7 @@ exports.createPages = async function ({ actions, graphql }) {
     const { id } = edge.node;
     actions.createPage({
       path,
-      component: require.resolve('./src/components/pages/Layout.tsx'),
+      component: require.resolve('./src/components/pages/Generator.tsx'),
       context: { id, title, style: path },
     });
   });
