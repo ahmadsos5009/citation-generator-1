@@ -1,28 +1,21 @@
 import * as React from 'react';
-import { Link } from 'gatsby';
-import styled from 'styled-components';
+import { StaticImage } from 'gatsby-plugin-image';
+import { AppBar, Toolbar } from '@mui/material';
 
-const Header: React.FC<{ siteTitle: string }> = ({ siteTitle }) => (
-  <MainHeader>
-    <Wrapper>
-      <h1>
-        <Link to="/">
-          {siteTitle}
-        </Link>
-      </h1>
-    </Wrapper>
-  </MainHeader>
+const Header: React.FC = () => (
+  <AppBar position="relative" color="transparent">
+    <Toolbar>
+      <StaticImage
+        src="../images/logo.png"
+        width={300}
+        quality={95}
+        formats={['auto', 'webp', 'avif']}
+        alt="Citation Generator"
+      />
+      {/*  TODO:: add other options, eg: search for a style   */}
+    </Toolbar>
+  </AppBar>
+
 );
-
-const MainHeader = styled.header`
-  background: rebeccapurple;
-  margin-bottom: 1.45rem;
-`;
-
-const Wrapper = styled.div`
-  margin: 0 auto;
-  max-width: 960px;
-  padding: 1.45rem 1.0875rem;
-`;
 
 export default Header;

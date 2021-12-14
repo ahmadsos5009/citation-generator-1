@@ -1,41 +1,83 @@
 import * as React from 'react';
-import { Link } from 'gatsby';
-import { StaticImage } from 'gatsby-plugin-image';
-
-import styled from 'styled-components';
+import {
+  Box, Button, Card, CardActions, CardContent, CardMedia, Container, Grid, Stack, Typography,
+} from '@mui/material';
 import Seo from '../components/Seo';
+import Layout from '../components/pages/Layout';
+
+const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 const IndexPage = () => (
-  <>
+  <Layout>
+    {/* TODO:: add more info */}
     <Seo title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <StaticImage
-      src="../images/gatsby-astronaut.png"
-      width={300}
-      quality={95}
-      formats={['auto', 'webp', 'avif']}
-      alt="A Gatsby astronaut"
-      style={{ marginBottom: '1.45rem' }}
-    />
-    <p>
-      <Container>
-        <Link to="/page1/">Go to page one test</Link>
+    <Box
+      sx={{
+        bgcolor: 'background.paper',
+        pt: 8,
+        pb: 6,
+      }}
+    >
+      <Container maxWidth="sm">
+        <Typography
+          component="h1"
+          variant="h2"
+          align="center"
+          color="text.primary"
+          gutterBottom
+        >
+          Citation Generator
+        </Typography>
+        <Typography variant="h5" align="center" color="text.secondary" paragraph>
+          Create citation online rapidly free, with support for a large number of citation styles.
+        </Typography>
+        <Stack
+          sx={{ pt: 4 }}
+          direction="row"
+          spacing={2}
+          justifyContent="center"
+        >
+          <Button variant="contained">Main call to action</Button>
+          <Button variant="outlined">Secondary action</Button>
+        </Stack>
       </Container>
-      <br />
-      <Link to="/using-typescript/">Go to Using TypeScript</Link>
-    </p>
-  </>
+    </Box>
+    <Container sx={{ py: 8 }} maxWidth="md">
+      {/* End hero unit */}
+      <Grid container spacing={4}>
+        {cards.map((card) => (
+          <Grid item key={card} xs={12} sm={6} md={4}>
+            <Card
+              sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+            >
+              <CardMedia
+                component="img"
+                sx={{
+                  // 16:9
+                  pt: '56.25%',
+                }}
+                image="https://source.unsplash.com/random"
+                alt="random"
+              />
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Heading
+                </Typography>
+                <Typography>
+                  This is a media card. You can use this section to describe the
+                  content.
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button size="small">View</Button>
+                <Button size="small">Edit</Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  </Layout>
 );
-
-const Container = styled.span`
-  margin: 3rem auto;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-`;
 
 export default IndexPage;
