@@ -1,31 +1,61 @@
 import React, {
-  Dispatch, SetStateAction, useCallback, useContext, useState,
+  Reducer, useCallback, useContext, useReducer,
 } from 'react';
-import { Citation } from '../types';
+import { Author, DocumentCitation } from '../types';
 
 export const StoreContext = React.createContext<{
-  citation: Citation | {}
-  setCitation: Dispatch<SetStateAction<Citation | {}>>
+  state: DocumentCitation
+  dispatch: React.Dispatch<ICitationAction>
 }>({
-  citation: {},
-  setCitation: () => {},
+  state: {
+    // @ts-ignore
+    journal: {}, book: {}, report: {}, website: {},
+  },
+  dispatch: () => {},
 });
 
+interface ICitationAction {
+  type: string;
+  id: string;
+  documentType: string;
+  value: string | number | Author[]
+}
+
+const reducer = (state: DocumentCitation, action: ICitationAction): DocumentCitation => {
+  const {
+    type, id, value, documentType,
+  } = action;
+  switch (type) {
+    case 'set':
+      // @ts-ignore
+      state[documentType][id] = value;
+      return { ...state };
+    default:
+      throw new Error();
+  }
+};
+
 export const StoreProvider: React.FC = ({ children }) => {
-  const [citation, setCitation] = useState<Citation | {}>({});
+  const [state, dispatch] = useReducer<Reducer<DocumentCitation, ICitationAction>>(reducer, {
+    // @ts-ignore
+    journal: {}, book: {}, report: {}, website: {},
+  });
 
   return (
-    <StoreContext.Provider value={{ citation, setCitation }}>
+    <StoreContext.Provider value={{
+      state, dispatch,
+    }}
+    >
       {children}
     </StoreContext.Provider>
   );
 };
 
-export const callBack = (id: string) => {
-  const { citation, setCitation } = useContext(StoreContext);
+export const callBack = (id: string, documentType: string) => {
+  const { dispatch } = useContext(StoreContext);
   return useCallback((e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    // @ts-ignore
-    citation[id] = e.target.value;
-    setCitation(citation);
-  }, [citation, setCitation]);
+    dispatch({
+      type: 'set', id, documentType, value: e.target.value,
+    });
+  }, [dispatch]);
 };

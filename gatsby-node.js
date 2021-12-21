@@ -33,3 +33,18 @@ exports.createPages = async function ({ actions, graphql }) {
     });
   });
 };
+
+// eslint-disable-next-line import/no-extraneous-dependencies
+const webpack = require('webpack');
+
+exports.onCreateWebpackConfig = ({
+  actions,
+}) => {
+  actions.setWebpackConfig({
+    plugins: [
+      new webpack.ProvidePlugin({
+        process: 'process/browser',
+      }),
+    ],
+  });
+};
