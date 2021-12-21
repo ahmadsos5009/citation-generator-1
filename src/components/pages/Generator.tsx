@@ -66,15 +66,17 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
             )}
           </StoreProvider>
         </Container>
-        <Container sx={{
-          width: '20%',
-          p: 4,
-          m: 0,
-          textAlign: 'center',
-        }}
-        >
-          Citation sources
-        </Container>
+        {/* <Container sx={{ */}
+        {/*  width: '20%', */}
+        {/*  p: 4, */}
+        {/*  m: 0, */}
+        {/*  textAlign: 'center', */}
+        {/* }} */}
+        {/* > */}
+        {/*  <Typography> */}
+        {/*    References */}
+        {/*  </Typography> */}
+        {/* </Container> */}
       </Box>
     </Layout>
   );

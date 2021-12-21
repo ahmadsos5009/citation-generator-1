@@ -10,7 +10,7 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import _uniqueId from 'lodash/uniqueId';
-import { Author } from '../types';
+import { Author, DocumentType } from '../types';
 import { callBack, StoreContext } from '../provider/Store';
 
 interface FieldProps {
@@ -18,6 +18,8 @@ interface FieldProps {
   id: string
   required?: boolean | false
   multiline?: boolean
+  documentType: DocumentType
+  error?: boolean
 }
 
 interface NumberFieldProps {
@@ -26,19 +28,20 @@ interface NumberFieldProps {
 }
 
 export const TextFieldInput: React.FC<FieldProps> = ({
-  label, id, required, multiline,
+  label, id, required, multiline, documentType, error,
 }) => {
-  const onChange = callBack(id);
+  const onChange = callBack(id, documentType);
 
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="outlined">
-      <FormLabel id={id}>
+      <FormLabel id={id} error={error}>
         {label}
       </FormLabel>
       <FilledInput
         required={required}
         multiline={multiline}
         onChange={onChange}
+        error={error}
         fullWidth
         id={id}
       />
@@ -47,13 +50,14 @@ export const TextFieldInput: React.FC<FieldProps> = ({
 };
 
 export const NumberFieldInput: React.FC<FieldProps & NumberFieldProps> = ({
-  label, id, required, width, inputProps,
+  label, id, required, width, error,
+  inputProps, documentType,
 }) => {
-  const onChange = callBack(id);
+  const onChange = callBack(id, documentType);
 
   return (
     <FormControl fullWidth sx={{ m: 1, maxWidth: width || 100 }} variant="outlined">
-      <FormLabel id={id}>
+      <FormLabel id={id} error={error}>
         {label}
       </FormLabel>
       <FilledInput
@@ -62,13 +66,14 @@ export const NumberFieldInput: React.FC<FieldProps & NumberFieldProps> = ({
         name="test"
         onChange={onChange}
         inputProps={inputProps}
+        error={error}
         id={id}
       />
     </FormControl>
   );
 };
 
-export const AuthorsInput: React.FC = () => {
+export const AuthorsInput: React.FC<{ documentType: DocumentType }> = ({ documentType }) => {
   const [authors, setAuthors] = useState<Author[]>([{ id: _uniqueId() }]);
 
   const handleOnAddClick = useCallback(() => {
@@ -89,12 +94,12 @@ export const AuthorsInput: React.FC = () => {
       ? { ...author, family: event.currentTarget.value } : author))]);
   }, [authors, setAuthors]);
 
-  const { citation, setCitation } = useContext(StoreContext);
+  const { dispatch } = useContext(StoreContext);
   useEffect(() => {
-    // @ts-ignore
-    citation.authors = authors;
-    setCitation(citation);
-  }, [authors]);
+    dispatch({
+      type: 'set', id: 'authors', documentType, value: authors,
+    });
+  }, [authors, dispatch]);
 
   return (
     <FormControl fullWidth sx={{ m: 1 }} variant="outlined">
@@ -127,27 +132,28 @@ export const AuthorsInput: React.FC = () => {
   );
 };
 
-export const PagesInput: React.FC = () => (
+export const PagesInput: React.FC<{ documentType: DocumentType }> = ({ documentType }) => (
   <Box sx={{ m: 1 }}>
     <AuthorsLabel id="pages">
       Pages
     </AuthorsLabel>
-    <NumberFieldInput label="From" id="from" />
-    <NumberFieldInput label="To" id="to" />
+    <NumberFieldInput label="From" id="from" documentType={documentType} />
+    <NumberFieldInput label="To" id="to" documentType={documentType} />
   </Box>
 );
 
-export const LinkInput: React.FC = () => (
+export const LinkInput: React.FC<{ documentType: DocumentType }> = ({ documentType }) => (
   <Box sx={{ m: 1 }}>
     <AuthorsLabel id="link">
       Use Doi or URL of the journal home page
     </AuthorsLabel>
-    <TextFieldInput label="" id="link" />
+    <TextFieldInput label="" id="link" documentType={documentType} />
   </Box>
 );
 
-const FormLabel = styled.p`
+const FormLabel = styled.p<{ error?: boolean }>`
     margin: 0 0 4px 0;
+    ${(props) => props.error && 'color: rgb(211, 47, 47)'};
 `;
 
 const AuthorsLabel = styled(FormLabel)`
