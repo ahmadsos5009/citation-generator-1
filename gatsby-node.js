@@ -41,7 +41,11 @@ exports.onCreateWebpackConfig = ({ actions, getConfig }) => {
   const config = getConfig()
   if (config.mode === "production") {
     actions.setWebpackConfig({
-      plugins: [new webpack.EnvironmentPlugin({ ...process.env })],
+      plugins: [
+        new webpack.DefinePlugin({
+          process: { ...process.env },
+        }),
+      ],
     })
   } else {
     actions.setWebpackConfig({
