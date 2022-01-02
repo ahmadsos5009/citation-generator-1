@@ -62,9 +62,8 @@
   ],
   "license": "0BSD",
   "scripts": {
-    "build": "gatsby build",
+    "build": "gatsby build --prefix-paths",
     "develop": "gatsby develop",
-    "deploy": "gh-pages -d build",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "lint": "eslint --ignore-path .gitignore --ignore-path .eslintrc.js . --ext .ts,.tsx",
     "start": "npm run develop",
