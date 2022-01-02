@@ -28,6 +28,3 @@ jobs:
 
       - name: Deploy
         run: yarn run deploy
-        with:
-          branch: gh-pages
-          folder: public
