@@ -1,61 +1,106 @@
-import React, {
-  Reducer, useCallback, useContext, useReducer,
-} from 'react';
-import { Author, DocumentCitation } from '../types';
+import React, { Reducer, useCallback, useContext, useReducer } from "react"
+import { Author, Citation, CitationDocument } from "../types"
 
+// @ts-ignore
 export const StoreContext = React.createContext<{
-  state: DocumentCitation
+  state: CitationDocument
   dispatch: React.Dispatch<ICitationAction>
 }>({
   state: {
     // @ts-ignore
-    journal: {}, book: {}, report: {}, website: {},
+    journal: {},
+    // @ts-ignore
+    book: {},
+    // @ts-ignore
+    report: {},
+    // @ts-ignore
+    website: {},
   },
-  dispatch: () => {},
-});
+  dispatch: () => {
+    console.error("Unmounted")
+  },
+})
 
 interface ICitationAction {
-  type: string;
-  id: string;
-  documentType: string;
-  value: string | number | Author[]
+  type: "set" | "clear" | "fill"
+  id?: string
+  documentType?: string
+  value?: string | number | Author[] | Citation
 }
 
-const reducer = (state: DocumentCitation, action: ICitationAction): DocumentCitation => {
-  const {
-    type, id, value, documentType,
-  } = action;
+const reducer = (
+  state: CitationDocument,
+  action: ICitationAction,
+): CitationDocument => {
+  const { type, id, value, documentType } = action
   switch (type) {
-    case 'set':
+    case "set":
       // @ts-ignore
-      state[documentType][id] = value;
-      return { ...state };
+      state[documentType][id] = value
+      return { ...state }
+    case "clear":
+      return {
+        // @ts-ignore
+        journal: {},
+        // @ts-ignore
+        book: {},
+        // @ts-ignore
+        report: {},
+        // @ts-ignore
+        website: {},
+      }
+    case "fill":
+      // @ts-ignore
+      state[documentType] = value
+      return {
+        ...state,
+      }
     default:
-      throw new Error();
+      throw new Error()
   }
-};
+}
 
 export const StoreProvider: React.FC = ({ children }) => {
-  const [state, dispatch] = useReducer<Reducer<DocumentCitation, ICitationAction>>(reducer, {
-    // @ts-ignore
-    journal: {}, book: {}, report: {}, website: {},
-  });
+  const [state, dispatch] = useReducer<Reducer<CitationDocument, ICitationAction>>(
+    reducer,
+    {
+      // @ts-ignore
+      journal: {},
+      // @ts-ignore
+      book: {},
+      // @ts-ignore
+      report: {},
+      // @ts-ignore
+      website: {},
+    },
+  )
 
   return (
-    <StoreContext.Provider value={{
-      state, dispatch,
-    }}
+    <StoreContext.Provider
+      value={{
+        state,
+        dispatch,
+      }}
     >
       {children}
     </StoreContext.Provider>
-  );
-};
+  )
+}
 
-export const callBack = (id: string, documentType: string) => {
-  const { dispatch } = useContext(StoreContext);
-  return useCallback((e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
-    dispatch({
-      type: 'set', id, documentType, value: e.target.value,
-    });
-  }, [dispatch]);
-};
+export const callBack = (
+  id: string,
+  documentType: string,
+): ((e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void) => {
+  const { dispatch } = useContext(StoreContext)
+  return useCallback(
+    (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+      dispatch({
+        type: "set",
+        id,
+        documentType,
+        value: e.target.value,
+      })
+    },
+    [dispatch],
+  )
+}

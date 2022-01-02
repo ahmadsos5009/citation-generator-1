@@ -8,8 +8,11 @@
     "noEmit": true,
     "isolatedModules": true,
     "esModuleInterop": true,
-    "noUnusedLocals": false,
+    "noUnusedLocals": false
   },
-  "no-use-before-define": ["error", { "functions": true, "classes": true, "variables": true }],
+  "no-use-before-define": [
+    "error",
+    { "functions": true, "classes": true, "variables": true }
+  ],
   "exclude": ["node_modules", "public", ".cache"]
 }

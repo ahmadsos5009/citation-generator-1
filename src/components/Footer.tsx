@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Box, Typography } from '@mui/material';
+import * as React from "react"
+import { Box, Typography } from "@mui/material"
 
 const Footer: React.FC = () => (
   <Box sx={{ p: 6 }} component="footer">
@@ -15,6 +15,6 @@ const Footer: React.FC = () => (
       Something here to give the footer a purpose!
     </Typography>
   </Box>
-);
+)
 
-export default Footer;
+export default Footer

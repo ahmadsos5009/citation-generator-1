@@ -1,33 +1,52 @@
-import React, { useCallback } from 'react';
-import { CitationOutput } from '../../types';
+import React, { useCallback } from "react"
+import { CitationOutput } from "../../types"
 
-export default (citation?: CitationOutput) => {
-  const [showAlert, setShowAlert] = React.useState(false);
+type ClipboardProps = {
+  handleClick: (event: React.MouseEvent<HTMLElement>) => void
+  handleClose: (
+    event?: Event | React.SyntheticEvent<Element, Event> | undefined,
+    reason?: string | undefined,
+  ) => void
+  showAlert: boolean
+}
 
-  const handleClick = useCallback((event: Event) => {
-    if (!citation) {
-      return;
-    }
+export default (citation?: CitationOutput): ClipboardProps => {
+  const [showAlert, setShowAlert] = React.useState(false)
 
-    const target = ((event.target as HTMLElement)?.parentNode as HTMLButtonElement).value;
-    let clipboardText = '';
+  const handleClick = useCallback(
+    (event: React.MouseEvent<HTMLElement>) => {
+      if (!citation) {
+        return
+      }
 
-    if (target === 'citation') {
-      clipboardText = citation.html;
-    } else {
-      clipboardText = citation.inText;
-    }
+      const target = ((event.target as HTMLElement)?.parentNode as HTMLButtonElement)
+        .value
+      let clipboardText = ""
 
-    (async () => { await navigator.clipboard.writeText(clipboardText); })();
-    setShowAlert(true);
-  }, [citation]);
+      if (target === "citation") {
+        clipboardText = citation.html
+      } else {
+        clipboardText = citation.inText
+      }
 
-  const handleClose = useCallback((event?: React.SyntheticEvent | Event, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setShowAlert(false);
-  }, []);
+      (async () => {
+        await navigator.clipboard.writeText(clipboardText)
+      })()
 
-  return { handleClick, handleClose, showAlert };
-};
+      setShowAlert(true)
+    },
+    [citation],
+  )
+
+  const handleClose = useCallback(
+    (event?: React.SyntheticEvent | Event, reason?: string) => {
+      if (reason === "clickaway") {
+        return
+      }
+      setShowAlert(false)
+    },
+    [],
+  )
+
+  return { handleClick, handleClose, showAlert }
+}

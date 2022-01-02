@@ -1,7 +1,7 @@
-import * as React from 'react';
-import styled from 'styled-components';
-import Header from '../Header';
-import Footer from '../Footer';
+import * as React from "react"
+import styled from "styled-components"
+import Header from "../Header"
+import Footer from "../Footer"
 
 const Layout: React.FC = ({ children }) => (
   <Wrapper>
@@ -9,10 +9,10 @@ const Layout: React.FC = ({ children }) => (
     <main>{children}</main>
     <Footer />
   </Wrapper>
-);
+)
 
 const Wrapper = styled.div`
-  height: 100%
-`;
+  height: 100%;
+`
 
-export default Layout;
+export default Layout

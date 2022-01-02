@@ -1,3 +1,3 @@
-import useClipboard from './clipboard';
+import useClipboard from "./clipboard"
 
-export { useClipboard };
+export { useClipboard }
