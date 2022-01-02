@@ -1,4 +1,5 @@
 module.exports = {
+  pathPrefix: "/citation-generator",
   siteMetadata: {
     title: "Citation Generator",
     description: "Create Citation based on CSL styles",
