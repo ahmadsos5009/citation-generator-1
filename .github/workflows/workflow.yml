@@ -27,4 +27,11 @@ jobs:
         run: yarn run build
 
       - name: Deploy
-        run: yarn run deploy
+        env:
+          MY_EMAIL: test@gmail.com
+          MY_NAME: test
+        run: |
+          git config --global user.email $MY_EMAIL
+          git config --global user.name $MY_NAME
+          yarn install
+          yarn deploy
