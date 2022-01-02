@@ -27,11 +27,7 @@ jobs:
         run: yarn run build
 
       - name: Deploy
-        env:
-          MY_EMAIL: ahmadsos5009@hotmail.com
-          MY_NAME: asouqi
-        run: |
-          git config --global user.email $MY_EMAIL
-          git config --global user.name $MY_NAME
-          yarn install
-          yarn deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.1
+        with:
+          branch: gh-pages
+          folder: public
