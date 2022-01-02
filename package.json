@@ -23,6 +23,7 @@
     "gatsby-plugin-react-helmet": "^4.10.0",
     "gatsby-plugin-sharp": "^3.10.2",
     "gatsby-plugin-typescript": "^3.10.0",
+    "gatsby-plugin-webfonts": "^2.2.1",
     "gatsby-source-filesystem": "^3.10.0",
     "gatsby-theme-material-ui": "^5.1.0",
     "gatsby-transformer-sharp": "^3.10.0",

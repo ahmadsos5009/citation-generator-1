@@ -37,6 +37,23 @@ module.exports = {
         path: `${__dirname}/src/mdx`,
       },
     },
+    {
+      resolve: `gatsby-plugin-webfonts`,
+      options: {
+        fonts: {
+          google: [
+            {
+              family: "Roboto",
+              variants: ["300", "400", "500"],
+            },
+            {
+              family: "Open Sans Condensed",
+              variants: ["300", "700"],
+            },
+          ],
+        },
+      },
+    },
     "gatsby-theme-material-ui",
     "gatsby-plugin-mdx",
     "gatsby-plugin-gatsby-cloud",
