@@ -1,5 +1,5 @@
 import React, { Reducer, useCallback, useContext, useReducer } from "react"
-import { Author, Citation, CitationDocument } from "../types"
+import { Author, Citation, CitationDocument, CitationDocumentType } from "../types"
 
 // @ts-ignore
 export const StoreContext = React.createContext<{
@@ -89,7 +89,7 @@ export const StoreProvider: React.FC = ({ children }) => {
 
 export const callBack = (
   id: string,
-  documentType: string,
+  documentType: CitationDocumentType,
 ): ((e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => void) => {
   const { dispatch } = useContext(StoreContext)
   return useCallback(

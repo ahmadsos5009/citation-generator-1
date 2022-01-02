@@ -1,12 +1,6 @@
 import React from "react"
 import { Box } from "@mui/material"
-
-export enum CitationDocumentType {
-  JOURNAL,
-  BOOK,
-  REPORT,
-  WEBSITE,
-}
+import { CitationDocumentType } from "../types"
 
 interface TabPanelProps {
   children: React.ReactNode

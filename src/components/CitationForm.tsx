@@ -1,6 +1,5 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from "react"
 import { Alert, Box, Snackbar, Stack } from "@mui/material"
-import { CitationDocumentType } from "./TabPanel"
 import {
   AuthorsInput,
   LinkInput,
@@ -10,7 +9,7 @@ import {
 } from "./Input"
 import { StoreContext } from "../provider/Store"
 import { CiteResourceButton, ClearFields } from "./Buttons"
-import { Citation, CitationOutput, Events } from "../types"
+import { Citation, CitationDocumentType, CitationOutput, Events } from "../types"
 import { generateCitation } from "./utilities/citation_generator"
 import { isEmptyObject } from "./utilities/object"
 import { useClipboard } from "./hooks"
@@ -77,7 +76,7 @@ const JournalForm: React.FC = () => {
       if ("journal" in state) {
         DB.dispatch({
           type: "save",
-          document: "journal",
+          citationDocument: CitationDocumentType.JOURNAL,
           citation: state.journal,
         })
         clearJournalFields()
@@ -99,7 +98,7 @@ const JournalForm: React.FC = () => {
     const callback = (e: CustomEvent<{ payload: Citation }>) =>
       dispatch({
         type: "fill",
-        documentType: "journal",
+        documentType: CitationDocumentType.JOURNAL,
         value: e.detail.payload,
       })
     refNode.current?.addEventListener(Events.CITATION, callback as EventListener)
@@ -124,47 +123,47 @@ const JournalForm: React.FC = () => {
         label="Article Title *"
         id="articleTitle"
         required
-        documentType="journal"
+        documentType={CitationDocumentType.JOURNAL}
         error={error.articleTitle}
       />
       <TextFieldInput
         label="Journal Title *"
         id="journalTitle"
         required
-        documentType="journal"
+        documentType={CitationDocumentType.JOURNAL}
         error={error.journalTitle}
       />
       <NumberFieldInput
         label="Year *"
         id="year"
         required
-        documentType="journal"
+        documentType={CitationDocumentType.JOURNAL}
         error={error.year}
         inputProps={{ minLength: 4, maxLength: 4, min: 0 }}
       />
-      <AuthorsInput documentType="journal" />
+      <AuthorsInput documentType={CitationDocumentType.JOURNAL} />
       <NumberFieldInput
         label="Volume"
         id="volume"
         width={200}
-        documentType="journal"
+        documentType={CitationDocumentType.JOURNAL}
         inputProps={{ min: 0 }}
       />
       <NumberFieldInput
         label="Issue"
         id="issue"
         width={200}
-        documentType="journal"
+        documentType={CitationDocumentType.JOURNAL}
         inputProps={{ min: 0 }}
       />
-      <PagesInput documentType="journal" />
-      <LinkInput documentType="journal" />
+      <PagesInput documentType={CitationDocumentType.JOURNAL} />
+      <LinkInput documentType={CitationDocumentType.JOURNAL} />
 
       {/* TODO:: check citation.js support for annotation */}
       {/* <TextFieldInput label="Annotation" id="annotation" documentType="journal" multiline /> */}
 
       <Stack spacing={4} direction="row" justifyContent="end">
-        <ClearFields document="journal" />
+        <ClearFields document={CitationDocumentType.JOURNAL} />
         <CiteResourceButton onCiteResource={onCiteResource} />
       </Stack>
 

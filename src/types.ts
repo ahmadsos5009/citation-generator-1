@@ -1,4 +1,9 @@
-export type DocumentType = "journal" | "book" | "report" | "website"
+export enum CitationDocumentType {
+  JOURNAL = "journal",
+  BOOK = "book",
+  REPORT = "report",
+  WEBSITE = "website",
+}
 
 export type CitationStyle = "apa"
 
@@ -7,7 +12,7 @@ export enum Events {
   AUTHORS = "fill-authors-field",
 }
 
-export type CitationDocument = { [k in DocumentType]: Citation }
+export type CitationDocument = { [k in CitationDocumentType]: Citation }
 
 export interface Citation {
   id: string
@@ -39,5 +44,5 @@ export interface CitationOutput {
 }
 
 export type DBCitations = {
-  [k in DocumentType]: { [k: string]: Citation }
+  [k in CitationDocumentType]: { [k: string]: Citation }
 }

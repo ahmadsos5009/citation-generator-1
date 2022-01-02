@@ -12,7 +12,7 @@ import styled from "styled-components"
 import AddIcon from "@mui/icons-material/Add"
 import DeleteIcon from "@mui/icons-material/Delete"
 import { v4 as uuid } from "uuid"
-import { Author, DocumentType, Events } from "../types"
+import { Author, CitationDocumentType, Events } from "../types"
 import { callBack, StoreContext } from "../provider/Store"
 import { fillAuthorsFields } from "./utilities/html_fields"
 
@@ -22,7 +22,7 @@ interface FieldProps {
   required?: boolean | false
   // eslint-disable-next-line react/require-default-props
   multiline?: boolean
-  documentType: DocumentType
+  documentType: CitationDocumentType
   error?: boolean
 }
 
@@ -83,7 +83,7 @@ export const NumberFieldInput: React.FC<FieldProps & NumberFieldProps> = ({
   )
 }
 
-export const AuthorsInput: React.FC<{ documentType: DocumentType }> = ({
+export const AuthorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
   documentType,
 }) => {
   const [authors, setAuthors] = useState<Author[]>([{ id: `Author:${uuid()}` }])
@@ -188,7 +188,7 @@ export const AuthorsInput: React.FC<{ documentType: DocumentType }> = ({
   )
 }
 
-export const PagesInput: React.FC<{ documentType: DocumentType }> = ({
+export const PagesInput: React.FC<{ documentType: CitationDocumentType }> = ({
   documentType,
 }) => (
   <Box sx={{ m: 1 }}>
@@ -198,7 +198,7 @@ export const PagesInput: React.FC<{ documentType: DocumentType }> = ({
   </Box>
 )
 
-export const LinkInput: React.FC<{ documentType: DocumentType }> = ({
+export const LinkInput: React.FC<{ documentType: CitationDocumentType }> = ({
   documentType,
 }) => (
   <Box sx={{ m: 1 }}>

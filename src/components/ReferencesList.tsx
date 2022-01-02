@@ -20,10 +20,10 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import styled from "styled-components"
 import { generateCitation } from "./utilities/citation_generator"
 import { DBContext } from "../provider/DBProvider"
+import { CitationDocumentType } from "../types"
 
 export const ReferencesList: React.FC = () => {
   const { state, showCitationsList, dispatch } = useContext(DBContext)
-
   const citations = useMemo(
     () =>
       Object.values(state.value.journal).map((c) => ({
@@ -38,7 +38,7 @@ export const ReferencesList: React.FC = () => {
       if (event.currentTarget) {
         dispatch({
           type: "delete",
-          document: "journal",
+          citationDocument: CitationDocumentType.JOURNAL,
           citationID: (event.currentTarget as HTMLButtonElement).value,
         })
       }
@@ -51,7 +51,7 @@ export const ReferencesList: React.FC = () => {
       if (event.currentTarget) {
         dispatch({
           type: "edit",
-          document: "journal",
+          citationDocument: CitationDocumentType.JOURNAL,
           citationID: (event.currentTarget as HTMLButtonElement).value,
         })
       }
