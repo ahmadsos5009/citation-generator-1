@@ -1,7 +1,7 @@
-import React from 'react';
-import { Box } from '@mui/material';
+import React from "react"
+import { Box } from "@mui/material"
 
-export enum DocumentType {
+export enum CitationDocumentType {
   JOURNAL,
   BOOK,
   REPORT,
@@ -9,35 +9,31 @@ export enum DocumentType {
 }
 
 interface TabPanelProps {
-  children: React.ReactNode;
-  index: DocumentType;
-  value: DocumentType;
+  children: React.ReactNode
+  index: CitationDocumentType
+  value: CitationDocumentType
 }
 
-export default (props: TabPanelProps) => {
-  const {
-    children, value, index,
-  } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-    >
-      {value === index && (
+const Panel: React.FC<TabPanelProps> = ({ children, value, index }) => (
+  <div
+    role="tabpanel"
+    hidden={value !== index}
+    id={`simple-tabpanel-${index}`}
+    aria-labelledby={`simple-tab-${index}`}
+  >
+    {value === index && (
       <Box
         component="form"
         sx={{
-          '& .MuiTextField-root': { m: 1, width: '25ch' },
+          "& .MuiTextField-root": { m: 1, width: "25ch" },
         }}
         noValidate
         autoComplete="off"
       >
         {children}
       </Box>
-      )}
-    </div>
-  );
-};
+    )}
+  </div>
+)
+
+export default Panel

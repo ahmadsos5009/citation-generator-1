@@ -1,19 +1,28 @@
-import * as React from 'react';
+import * as React from "react"
 import {
-  Box, Button, Card, CardActions, CardContent, CardMedia, Container, Grid, Stack, Typography,
-} from '@mui/material';
-import Seo from '../components/Seo';
-import Layout from '../components/pages/Layout';
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material"
+import Seo from "../components/Seo"
+import Layout from "../components/pages/Layout"
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
-const IndexPage = () => (
+const IndexPage: React.FC = () => (
   <Layout>
     {/* TODO:: add more info */}
     <Seo title="Home" />
     <Box
       sx={{
-        bgcolor: 'background.paper',
+        bgcolor: "background.paper",
         pt: 8,
         pb: 6,
       }}
@@ -29,14 +38,10 @@ const IndexPage = () => (
           Citation Generator
         </Typography>
         <Typography variant="h5" align="center" color="text.secondary" paragraph>
-          Create citation online rapidly free, with support for a large number of citation styles.
+          Create citation online rapidly free, with support for a large number of
+          citation styles.
         </Typography>
-        <Stack
-          sx={{ pt: 4 }}
-          direction="row"
-          spacing={2}
-          justifyContent="center"
-        >
+        <Stack sx={{ pt: 4 }} direction="row" spacing={2} justifyContent="center">
           <Button variant="contained">Main call to action</Button>
           <Button variant="outlined">Secondary action</Button>
         </Stack>
@@ -48,13 +53,17 @@ const IndexPage = () => (
         {cards.map((card) => (
           <Grid item key={card} xs={12} sm={6} md={4}>
             <Card
-              sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+              sx={{
+                height: "100%",
+                display: "flex",
+                flexDirection: "column",
+              }}
             >
               <CardMedia
                 component="img"
                 sx={{
                   // 16:9
-                  pt: '56.25%',
+                  pt: "56.25%",
                 }}
                 image="https://source.unsplash.com/random"
                 alt="random"
@@ -78,6 +87,6 @@ const IndexPage = () => (
       </Grid>
     </Container>
   </Layout>
-);
+)
 
-export default IndexPage;
+export default IndexPage

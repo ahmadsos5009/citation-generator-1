@@ -7,44 +7,42 @@
 // eslint-disable-next-line func-names
 exports.createPages = async function ({ actions, graphql }) {
   const { data } = await graphql(`
-        query {
-            allMdx {
-                edges {
-                    node {
-                        frontmatter {
-                            path
-                            title
-                        }
-                        id
-                    }
-                }
+    query {
+      allMdx {
+        edges {
+          node {
+            frontmatter {
+              path
+              title
             }
+            id
+          }
         }
-    `);
+      }
+    }
+  `)
 
   // eslint-disable-next-line array-callback-return
   return data.allMdx.edges.map((edge) => {
-    const { path, title } = edge.node.frontmatter;
-    const { id } = edge.node;
+    const { path, title } = edge.node.frontmatter
+    const { id } = edge.node
     actions.createPage({
       path,
-      component: require.resolve('./src/components/pages/Generator.tsx'),
+      component: require.resolve("./src/components/pages/Generator.tsx"),
       context: { id, title, style: path },
-    });
-  });
-};
+    })
+  })
+}
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-const webpack = require('webpack');
+const webpack = require("webpack")
 
-exports.onCreateWebpackConfig = ({
-  actions,
-}) => {
+exports.onCreateWebpackConfig = ({ actions }) => {
   actions.setWebpackConfig({
     plugins: [
       new webpack.ProvidePlugin({
-        process: 'process/browser',
+        process: "process/browser",
       }),
     ],
-  });
-};
+  })
+}

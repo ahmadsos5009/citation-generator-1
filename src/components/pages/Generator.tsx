@@ -1,85 +1,85 @@
-import * as React from 'react';
-import {
-  Box, CardContent, Container, Tab, Tabs, Typography,
-} from '@mui/material';
-import { useCallback, useState } from 'react';
-import Layout from './Layout';
-import Seo from '../Seo';
-import TabPanel, { DocumentType } from '../TabPanel';
-import CitationForm from '../CitationForm';
-import { StoreProvider } from '../../provider/Store';
+import * as React from "react"
+import { Box, CardContent, Container, Tab, Tabs, Typography } from "@mui/material"
+import { useCallback, useState } from "react"
 
-interface PageProps{
-  pageContext: { id: string, title: string }
+import Layout from "./Layout"
+import Seo from "../Seo"
+import TabPanel, { CitationDocumentType } from "../TabPanel"
+import CitationForm from "../CitationForm"
+import { StoreProvider } from "../../provider/Store"
+import { CitationStyle } from "../../types"
+import { DBProvider } from "../../provider/DBProvider"
+import { ToggleCitationsListButton } from "../Buttons"
+import { ReferencesList } from "../ReferencesList"
+
+interface PageProps {
+  pageContext: { id: string; title: string; style: CitationStyle }
 }
 
 const Generator: React.FC<PageProps> = ({ pageContext }) => {
-  const [documentType, setDocumentType] = useState(DocumentType.JOURNAL);
-  const onDocumentTypeClick = useCallback((event, type) => setDocumentType(type), []);
-
+  const [documentType, setDocumentType] = useState(CitationDocumentType.JOURNAL)
+  const onDocumentTypeClick = useCallback((event, type) => setDocumentType(type), [])
   return (
-    <Layout>
-      {/* TODO:: add more info */}
-      <Seo title={`${pageContext.title}`} />
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          p: 1,
-          m: 1,
-        }}
-      >
-        <Container>
-          <CardContent sx={{ flexGrow: 1 }}>
-            <Typography
-              component="h1"
-              variant="h5"
-              align="center"
-              color="text.primary"
-              gutterBottom
-              sx={{ p: 1 }}
-            >
-              {pageContext.title}
-            </Typography>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <Tabs
-                value={documentType}
-                onChange={onDocumentTypeClick}
-                centered
+    <DBProvider format={pageContext.style}>
+      <Layout>
+        {/* TODO:: add more info */}
+        <Seo title={`${pageContext.title}`} />
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            p: 1,
+            m: 1,
+          }}
+        >
+          <Container>
+            <CardContent sx={{ flexGrow: 1 }}>
+              <Typography
+                component="h1"
+                variant="h5"
+                align="center"
+                color="text.primary"
+                gutterBottom
+                sx={{ p: 1 }}
               >
-                <Tab value={DocumentType.JOURNAL} label="Journal" />
-                <Tab value={DocumentType.BOOK} label="Book" />
-                <Tab value={DocumentType.REPORT} label="Report" />
-                <Tab value={DocumentType.WEBSITE} label="Website" />
-              </Tabs>
-            </Box>
-          </CardContent>
+                {pageContext.title}
+              </Typography>
 
-          <StoreProvider>
-            {(Object.keys(DocumentType) as Array<keyof typeof DocumentType>).map(
-              (document) => (
-                <TabPanel key={document} value={DocumentType[document]} index={documentType}>
-                  <CitationForm type={DocumentType[document]} />
+              <ToggleCitationsListButton />
+
+              <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Tabs value={documentType} onChange={onDocumentTypeClick} centered>
+                  <Tab value={CitationDocumentType.JOURNAL} label="Journal" />
+                  <Tab value={CitationDocumentType.BOOK} label="Book" />
+                  <Tab value={CitationDocumentType.REPORT} label="Report" />
+                  <Tab value={CitationDocumentType.WEBSITE} label="Website" />
+                </Tabs>
+              </Box>
+            </CardContent>
+
+            <StoreProvider>
+              {(
+                Object.keys(CitationDocumentType) as Array<
+                  keyof typeof CitationDocumentType
+                >
+              ).map((document) => (
+                <TabPanel
+                  key={document}
+                  value={CitationDocumentType[document]}
+                  index={documentType}
+                >
+                  <CitationForm type={CitationDocumentType[document]} />
                 </TabPanel>
-              ),
-            )}
-          </StoreProvider>
-        </Container>
-        {/* <Container sx={{ */}
-        {/*  width: '20%', */}
-        {/*  p: 4, */}
-        {/*  m: 0, */}
-        {/*  textAlign: 'center', */}
-        {/* }} */}
-        {/* > */}
-        {/*  <Typography> */}
-        {/*    References */}
-        {/*  </Typography> */}
-        {/* </Container> */}
-      </Box>
-    </Layout>
-  );
-};
+              ))}
+            </StoreProvider>
+          </Container>
 
-export default Generator;
+          <ReferencesList />
+        </Box>
+      </Layout>
+    </DBProvider>
+  )
+}
+
+export default Generator
