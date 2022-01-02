@@ -1,5 +1,10 @@
 import { v4 as uuid } from "uuid"
-import { Citation, CitationStyle, DBCitations, DocumentType } from "../../types"
+import {
+  Citation,
+  CitationDocumentType,
+  CitationStyle,
+  DBCitations,
+} from "../../types"
 
 const INITIAL_DOCUMENT: DBCitations = {
   journal: {},
@@ -19,11 +24,11 @@ export const getDBCitations = (format: CitationStyle): DBCitations => {
 
 export const storeCitation = (
   citation: Citation,
-  document: DocumentType,
+  document: CitationDocumentType,
   format: CitationStyle,
 ): DBCitations => {
   const dbCitation = getDBCitations(format)
-
+  console.log(document, dbCitation, citation.id)
   if (!dbCitation[document][citation.id]) {
     const id = `Citation:${uuid()}`
     dbCitation[document][id] = { ...citation, id }
@@ -37,7 +42,7 @@ export const storeCitation = (
 
 export const deleteCitation = (
   citationID: string,
-  document: DocumentType,
+  document: CitationDocumentType,
   format: CitationStyle,
 ): DBCitations => {
   const dbCitation = getDBCitations(format)

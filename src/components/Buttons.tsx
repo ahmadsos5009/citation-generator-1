@@ -4,7 +4,7 @@ import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import MenuOpenIcon from "@mui/icons-material/MenuOpen"
 import { DBContext } from "../provider/DBProvider"
 import { clearJournalFields } from "./utilities/html_fields"
-import { DocumentType } from "../types"
+import { CitationDocumentType } from "../types"
 import { StoreContext } from "../provider/Store"
 
 export const CiteResourceButton: React.FC<{
@@ -17,7 +17,9 @@ export const CiteResourceButton: React.FC<{
   </Tooltip>
 )
 
-export const ClearFields: React.FC<{ document: DocumentType }> = ({ document }) => {
+export const ClearFields: React.FC<{ document: CitationDocumentType }> = ({
+  document,
+}) => {
   const { dispatch } = useContext(StoreContext)
 
   const onClearClick = useCallback(() => {

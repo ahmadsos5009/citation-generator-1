@@ -43,6 +43,7 @@ exports.onCreateWebpackConfig = ({ actions }) => {
       new webpack.ProvidePlugin({
         process: "process/browser",
       }),
+      new webpack.EnvironmentPlugin({ ...process.env }),
     ],
   })
 }

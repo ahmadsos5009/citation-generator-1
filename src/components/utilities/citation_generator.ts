@@ -1,8 +1,8 @@
 import _mapKeys from "lodash/mapKeys"
-import { Cite } from /* webpackChunkName: "citation-js" */ "@citation-js/core"
+import { Cite } from "@citation-js/core"
 import { Citation } from "../../types"
 
-require(/* webpackChunkName: "citation-js" */ "@citation-js/plugin-csl")
+require("@citation-js/plugin-csl")
 
 export function generateCitation(
   citation: Citation,

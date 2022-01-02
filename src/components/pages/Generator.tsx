@@ -1,13 +1,13 @@
 import * as React from "react"
-import { Box, CardContent, Container, Tab, Tabs, Typography } from "@mui/material"
 import { useCallback, useState } from "react"
+import { Box, CardContent, Container, Tab, Tabs, Typography } from "@mui/material"
 
 import Layout from "./Layout"
 import Seo from "../Seo"
-import TabPanel, { CitationDocumentType } from "../TabPanel"
+import TabPanel from "../TabPanel"
 import CitationForm from "../CitationForm"
 import { StoreProvider } from "../../provider/Store"
-import { CitationStyle } from "../../types"
+import { CitationDocumentType, CitationStyle } from "../../types"
 import { DBProvider } from "../../provider/DBProvider"
 import { ToggleCitationsListButton } from "../Buttons"
 import { ReferencesList } from "../ReferencesList"
@@ -17,10 +17,12 @@ interface PageProps {
 }
 
 const Generator: React.FC<PageProps> = ({ pageContext }) => {
-  const [documentType, setDocumentType] = useState(CitationDocumentType.JOURNAL)
+  const [documentType, setDocumentType] = useState<CitationDocumentType>(
+    CitationDocumentType.JOURNAL,
+  )
   const onDocumentTypeClick = useCallback((event, type) => setDocumentType(type), [])
   return (
-    <DBProvider format={pageContext.style}>
+    <DBProvider format={pageContext.style} citationDocument={documentType}>
       <Layout>
         {/* TODO:: add more info */}
         <Seo title={`${pageContext.title}`} />
