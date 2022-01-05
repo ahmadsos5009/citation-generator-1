@@ -28,7 +28,7 @@ export const storeCitation = (
   format: CitationStyle,
 ): DBCitations => {
   const dbCitation = getDBCitations(format)
-  console.log(document, dbCitation, citation.id)
+
   if (!dbCitation[document][citation.id]) {
     const id = `Citation:${uuid()}`
     dbCitation[document][id] = { ...citation, id }
