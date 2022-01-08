@@ -5,6 +5,13 @@ export enum CitationDocumentType {
   WEBSITE = "website",
 }
 
+export const CitationJSDocumentType: { [k in CitationDocumentType]: string } = {
+  [CitationDocumentType.JOURNAL]: "article-journal",
+  [CitationDocumentType.REPORT]: "report",
+  [CitationDocumentType.BOOK]: "book",
+  [CitationDocumentType.WEBSITE]: "webpage",
+}
+
 export type CitationStyle = "apa"
 
 export enum Events {

@@ -11,6 +11,7 @@ import { CitationDocumentType, CitationStyle } from "../../types"
 import { DBProvider } from "../../provider/DBProvider"
 import { ToggleCitationsListButton } from "../Buttons"
 import { ReferencesList } from "../ReferencesList"
+import { ReferencesListProvider } from "../../provider/ReferencesListProvider"
 
 interface PageProps {
   pageContext: { id: string; title: string; style: CitationStyle }
@@ -77,7 +78,9 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
             </StoreProvider>
           </Container>
 
-          <ReferencesList />
+          <ReferencesListProvider>
+            <ReferencesList />
+          </ReferencesListProvider>
         </Box>
       </Layout>
     </DBProvider>
