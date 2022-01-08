@@ -1,11 +1,27 @@
 import React, { useCallback, useContext } from "react"
-import { Box, Fab, Tooltip, Typography } from "@mui/material"
+import {
+  Box,
+  Button,
+  Fab,
+  Fade,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+  Typography,
+} from "@mui/material"
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import MenuOpenIcon from "@mui/icons-material/MenuOpen"
 import { DBContext } from "../provider/DBProvider"
 import { clearJournalFields } from "./utilities/html_fields"
 import { CitationDocumentType } from "../types"
 import { StoreContext } from "../provider/Store"
+import FilterListIcon from "@mui/icons-material/FilterList"
+import { useDropDownMenu } from "./hooks"
+import { ReferencesListContext } from "../provider/ReferencesListProvider"
+import CheckIcon from "@mui/icons-material/Check"
+import ArticleIcon from "@mui/icons-material/Article"
+import { blue, red } from "@mui/material/colors"
 
 export const CiteResourceButton: React.FC<{
   onCiteResource: () => void
@@ -88,5 +104,109 @@ export const ToggleCitationsListButton: React.FC = () => {
         </Fab>
       )}
     </Box>
+  )
+}
+
+const ITEM_HEIGHT = 48
+
+export const ReferenceFilterButton: React.FC = () => {
+  const { anchorEl, handleClick, handleClose } = useDropDownMenu()
+  const { filters, setFilters } = useContext(ReferencesListContext)
+
+  const onMenuItemClick = useCallback(
+    (e: React.MouseEvent<HTMLLIElement>) => {
+      const type = e.currentTarget.accessKey as CitationDocumentType
+      if (filters.includes(type)) {
+        setFilters([...filters.filter((documentType) => documentType != type)])
+      } else {
+        setFilters([...filters, type])
+      }
+    },
+    [filters, setFilters],
+  )
+
+  return (
+    <>
+      <Tooltip title="Filter By Document Type">
+        <IconButton onClick={handleClick}>
+          <FilterListIcon />
+        </IconButton>
+      </Tooltip>
+
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "20ch",
+          },
+        }}
+      >
+        {Object.values(CitationDocumentType).map((option) => (
+          <MenuItem
+            key={option}
+            accessKey={option}
+            onClick={onMenuItemClick}
+            sx={{ justifyContent: "space-between" }}
+          >
+            {option}
+            {filters.includes(option) && <CheckIcon />}
+          </MenuItem>
+        ))}
+      </Menu>
+    </>
+  )
+}
+
+export const ReferenceExportButton: React.FC = () => {
+  const { anchorEl, handleClick, handleClose } = useDropDownMenu()
+  const open = Boolean(anchorEl)
+
+  return (
+    <>
+      <Button
+        id="fade-button"
+        aria-controls={open ? "fade-menu" : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? "true" : undefined}
+        onClick={handleClick}
+      >
+        Export
+      </Button>
+      <Menu
+        id="fade-menu"
+        MenuListProps={{
+          "aria-labelledby": "fade-button",
+        }}
+        PaperProps={{
+          style: {
+            width: "13ch",
+          },
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        TransitionComponent={Fade}
+      >
+        <MenuItem onClick={handleClose} sx={{ justifyContent: "space-between" }}>
+          PDF
+          <ArticleIcon sx={{ color: red[500] }} />
+        </MenuItem>
+        <MenuItem onClick={handleClose} sx={{ justifyContent: "space-between" }}>
+          Word
+          <ArticleIcon sx={{ color: blue[500] }} />
+        </MenuItem>
+        <MenuItem onClick={handleClose} sx={{ justifyContent: "space-between" }}>
+          BibTax
+          <ArticleIcon color="secondary" />
+        </MenuItem>
+      </Menu>
+    </>
   )
 }

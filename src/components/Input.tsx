@@ -86,7 +86,14 @@ export const NumberFieldInput: React.FC<FieldProps & NumberFieldProps> = ({
 export const AuthorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
   documentType,
 }) => {
-  const [authors, setAuthors] = useState<Author[]>([{ id: `Author:${uuid()}` }])
+  const {
+    state: { journal },
+    dispatch,
+  } = useContext(StoreContext)
+
+  const [authors, setAuthors] = useState<Author[]>(
+    journal?.authors || [{ id: `Author:${uuid()}` }],
+  )
   const nodeRef = useRef<HTMLDivElement>()
 
   const handleOnAddClick = useCallback(() => {
@@ -132,7 +139,6 @@ export const AuthorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
     [authors, setAuthors],
   )
 
-  const { dispatch } = useContext(StoreContext)
   useEffect(() => {
     dispatch({
       type: "set",

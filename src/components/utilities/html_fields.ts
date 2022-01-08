@@ -33,7 +33,7 @@ const clearNode = (node: HTMLElement | null) => {
 export const fillJournalFields = (citation: Citation): void => {
   updateNodeValue(document.getElementById("articleTitle"), citation.articleTitle)
   updateNodeValue(document.getElementById("journalTitle"), citation.journalTitle)
-  updateNodeValue(document.getElementById("year"), citation.year.toString())
+  updateNodeValue(document.getElementById("year"), citation.year?.toString())
 
   updateNodeValue(document.getElementById("volume"), citation.volume?.toString())
   updateNodeValue(document.getElementById("issue"), citation.issue?.toString())

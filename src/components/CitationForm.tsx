@@ -15,7 +15,7 @@ import { isEmptyObject } from "./utilities/object"
 import { useClipboard } from "./hooks"
 import { OnFlyCitationBox } from "./Citation"
 import { DBContext } from "../provider/DBProvider"
-import { clearJournalFields } from "./utilities/html_fields"
+import { clearJournalFields, fillJournalFields } from "./utilities/html_fields"
 
 const Form: React.FC<{ type: CitationDocumentType }> = ({ type }) => {
   switch (type) {
@@ -43,6 +43,10 @@ const JournalForm: React.FC = () => {
   const { state, dispatch } = useContext(StoreContext)
   const DB = useContext(DBContext)
   const [citation, setCitation] = useState<CitationOutput | undefined>()
+
+  useEffect(() => {
+    fillJournalFields(state.journal)
+  }, [])
 
   useEffect(() => {
     if (!isEmptyObject(state.journal)) {

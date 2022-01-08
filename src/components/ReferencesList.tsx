@@ -6,12 +6,10 @@ import {
   IconButton,
   List,
   ListItem,
-  ListSubheader,
   Stack,
   Typography,
 } from "@mui/material"
-import ListIcon from "@mui/icons-material/List"
-import FilterListIcon from "@mui/icons-material/FilterList"
+
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye"
 import EditIcon from "@mui/icons-material/Edit"
 import DeleteIcon from "@mui/icons-material/Delete"
@@ -20,18 +18,30 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import styled from "styled-components"
 import { generateCitation } from "./utilities/citation_generator"
 import { DBContext } from "../provider/DBProvider"
-import { CitationDocumentType } from "../types"
+import { CitationDocumentType, CitationJSDocumentType } from "../types"
+import { ReferenceExportButton, ReferenceFilterButton } from "./Buttons"
+import { ReferencesListContext } from "../provider/ReferencesListProvider"
+import { grey } from "@mui/material/colors"
 
 export const ReferencesList: React.FC = () => {
   const { state, showCitationsList, dispatch } = useContext(DBContext)
-  const citations = useMemo(
-    () =>
-      Object.values(state.value.journal).map((c) => ({
-        view: generateCitation(c, "article-journal"),
-        citationID: c.id,
-      })),
-    [state.value.journal],
-  )
+  const { filters } = useContext(ReferencesListContext)
+
+  const citations = useMemo(() => {
+    const citations: {
+      view: { html: string; inText: string }
+      citationID: string
+    }[] = []
+    filters.map((doc) =>
+      Object.values(state.value[doc]).map((c) => {
+        citations.push({
+          view: generateCitation(c, CitationJSDocumentType[doc]),
+          citationID: c.id,
+        })
+      }),
+    )
+    return citations
+  }, [state.value, filters])
 
   const handleOnDeleteClick = useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
@@ -76,6 +86,8 @@ export const ReferencesList: React.FC = () => {
         p: 4,
         m: 0,
         textAlign: "center",
+        border: "1px solid rgba(0, 0, 0, 0.12);",
+        borderRadius: "10px",
       }}
     >
       <List dense subheader={<ListHeader />}>
@@ -164,25 +176,34 @@ export const ReferencesList: React.FC = () => {
   )
 }
 
-const ListHeader: React.FC = () => (
-  <ListSubheader>
-    <Typography>References</Typography>
-    <Stack justifyContent="space-between" direction="row">
-      <Box>
-        <IconButton>
-          <ListIcon />
-        </IconButton>
-        <IconButton>
-          <FilterListIcon />
-        </IconButton>
-        <IconButton>
-          <RemoveRedEyeIcon />
-        </IconButton>
-      </Box>
-      <Checkbox edge="end" />
-    </Stack>
-  </ListSubheader>
-)
+const ListHeader: React.FC = () => {
+  return (
+    <Box>
+      <Typography>References</Typography>
+      <Stack
+        justifyContent="space-between"
+        direction="row"
+        sx={{
+          border: "1px solid rgba(0, 0, 0, 0.12);",
+          borderRadius: "10px",
+          margin: "12px 0",
+          background: grey[300],
+        }}
+      >
+        <Box>
+          <ReferenceFilterButton />
+          <IconButton>
+            <RemoveRedEyeIcon />
+          </IconButton>
+        </Box>
+        <Box marginRight="18px">
+          <ReferenceExportButton />
+          <Checkbox edge="end" />
+        </Box>
+      </Stack>
+    </Box>
+  )
+}
 
 const RefListItem = styled(ListItem)`
   .in-text-view {
