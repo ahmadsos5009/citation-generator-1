@@ -27,6 +27,8 @@
     "gatsby-source-filesystem": "^3.10.0",
     "gatsby-theme-material-ui": "^5.1.0",
     "gatsby-transformer-sharp": "^3.10.0",
+    "html-to-pdfmake": "^2.3.7",
+    "pdfmake": "^0.2.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
@@ -34,6 +36,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@types/html-to-pdfmake": "^2.1.0",
     "@types/react-helmet": "^6.1.2",
     "@types/styled-components": "^5.1.11",
     "@types/uuid": "^8.3.3",

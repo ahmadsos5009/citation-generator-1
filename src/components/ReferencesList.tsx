@@ -1,4 +1,10 @@
-import React, { useCallback, useContext, useMemo, useState } from "react"
+import React, {
+  ChangeEvent,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react"
 import {
   Box,
   Checkbox,
@@ -25,7 +31,8 @@ import { grey } from "@mui/material/colors"
 
 export const ReferencesList: React.FC = () => {
   const { state, showCitationsList, dispatch } = useContext(DBContext)
-  const { filters } = useContext(ReferencesListContext)
+  const { filters, selectedCitations, setSelectedCitations } =
+    useContext(ReferencesListContext)
 
   const citations = useMemo(() => {
     const citations: {
@@ -75,6 +82,18 @@ export const ReferencesList: React.FC = () => {
     [toggleInTextCitation, setToggleInTextCitation],
   )
 
+  const onCheckBoxClick = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const value = e.currentTarget.value
+      if (selectedCitations.includes(value)) {
+        setSelectedCitations([...selectedCitations.filter((c) => c != value)])
+      } else {
+        setSelectedCitations([...selectedCitations, value])
+      }
+    },
+    [selectedCitations, setSelectedCitations],
+  )
+
   if (!showCitationsList) {
     return <></>
   }
@@ -105,7 +124,13 @@ export const ReferencesList: React.FC = () => {
               key={index.toString()}
               secondaryAction={
                 <Stack direction="row">
-                  <Checkbox edge="end" inputProps={{ "aria-labelledby": labelId }} />
+                  <Checkbox
+                    edge="end"
+                    inputProps={{ "aria-labelledby": labelId }}
+                    value={citation.citationID}
+                    onChange={onCheckBoxClick}
+                    checked={selectedCitations.includes(citation.citationID)}
+                  />
                 </Stack>
               }
               disablePadding
@@ -177,6 +202,23 @@ export const ReferencesList: React.FC = () => {
 }
 
 const ListHeader: React.FC = () => {
+  const [selectAll, setSelectedAll] = useState(false)
+  const { setSelectedCitations, filters } = useContext(ReferencesListContext)
+  const { state } = useContext(DBContext)
+
+  const onSelectAllClick = useCallback(() => {
+    if (!selectAll) {
+      const selectedCitations: string[] = []
+      filters.map((doc) =>
+        Object.values(state.value[doc]).map((c) => selectedCitations.push(c.id)),
+      )
+      setSelectedCitations(selectedCitations)
+    } else {
+      setSelectedCitations([])
+    }
+    setSelectedAll(!selectAll)
+  }, [setSelectedAll, selectAll, filters, setSelectedCitations, state.value])
+
   return (
     <Box>
       <Typography>References</Typography>
@@ -198,7 +240,7 @@ const ListHeader: React.FC = () => {
         </Box>
         <Box marginRight="18px">
           <ReferenceExportButton />
-          <Checkbox edge="end" />
+          <Checkbox edge="end" value={selectAll} onChange={onSelectAllClick} />
         </Box>
       </Stack>
     </Box>
