@@ -64,3 +64,16 @@ const cleansingCitation = (citation: Citation) => {
   mapKeys.issued = [{ "date-parts": [mapKeys.issued] }]
   return mapKeys
 }
+
+export const generateCitations = (citations: Citation[]): string => {
+  const cite = Cite(
+    citations.map((c) => cleansingCitation(c)),
+    { format: "string" },
+  )
+
+  return cite.format("bibliography", {
+    format: "html",
+    template: "apa",
+    lang: "en-US",
+  })
+}

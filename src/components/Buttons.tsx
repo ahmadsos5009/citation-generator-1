@@ -22,6 +22,7 @@ import { ReferencesListContext } from "../provider/ReferencesListProvider"
 import CheckIcon from "@mui/icons-material/Check"
 import ArticleIcon from "@mui/icons-material/Article"
 import { blue, red } from "@mui/material/colors"
+import { ExportFileNameModel } from "./Model"
 
 export const CiteResourceButton: React.FC<{
   onCiteResource: () => void
@@ -194,18 +195,22 @@ export const ReferenceExportButton: React.FC = () => {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={handleClose} sx={{ justifyContent: "space-between" }}>
-          PDF
-          <ArticleIcon sx={{ color: red[500] }} />
-        </MenuItem>
-        <MenuItem onClick={handleClose} sx={{ justifyContent: "space-between" }}>
-          Word
-          <ArticleIcon sx={{ color: blue[500] }} />
-        </MenuItem>
-        <MenuItem onClick={handleClose} sx={{ justifyContent: "space-between" }}>
-          BibTax
-          <ArticleIcon color="secondary" />
-        </MenuItem>
+        <ExportFileNameModel
+          buttonText="PDF"
+          closeDropDown={handleClose}
+          buttonIcon={<ArticleIcon sx={{ color: red[500] }} />}
+        />
+        <ExportFileNameModel
+          buttonText="Word"
+          closeDropDown={handleClose}
+          buttonIcon={<ArticleIcon sx={{ color: blue[500] }} />}
+        />
+        {/*  TODO:: find way to convert input to BibTax */}
+        {/*<ExportFileNameModel*/}
+        {/*  buttonText="BibTax"*/}
+        {/*  closeDropDown={handleClose}*/}
+        {/*  buttonIcon={<ArticleIcon color="secondary" />}*/}
+        {/*/>*/}
       </Menu>
     </>
   )
