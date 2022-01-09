@@ -70,7 +70,7 @@ export const generateCitations = (citations: Citation[]): string => {
     citations.map((c) => cleansingCitation(c)),
     { format: "string" },
   )
-  console.log(cite.format("data", { type: "object" }))
+
   return cite.format("bibliography", {
     format: "html",
     template: "apa",
