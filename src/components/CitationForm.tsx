@@ -50,9 +50,13 @@ const JournalForm: React.FC = () => {
 
   useEffect(() => {
     if (!isEmptyObject(state.journal)) {
-      const { html, inText } = generateCitation(state.journal, "article-journal")
+      const { convertedCitation, inText } = generateCitation(
+        state.journal,
+        "article-journal",
+        "html",
+      )
       setCitation({
-        html,
+        html: convertedCitation,
         inText,
       })
       //  TODO:: show error in the UI
@@ -94,7 +98,10 @@ const JournalForm: React.FC = () => {
     }
   }, [setCitation, state.journal])
 
-  const { showAlert, handleClick, handleClose } = useClipboard(citation)
+  const { showAlert, handleClick, handleClose } = useClipboard(
+    state.journal,
+    "article-journal",
+  )
 
   useEffect(() => {
     if (!refNode.current) return

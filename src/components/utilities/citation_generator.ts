@@ -7,7 +7,8 @@ require("@citation-js/plugin-csl")
 export function generateCitation(
   citation: Citation,
   documentType: string,
-): { html: string; inText: string } {
+  format: "html" | "text",
+): { convertedCitation: string; inText: string } {
   // TODO:: add styles configuration
   // const cslPlugin = plugins.config.get('@csl');
   // cslPlugin.templates.add('apa', '');
@@ -15,18 +16,18 @@ export function generateCitation(
 
   const cite = Cite({ ...cleanedCitation, type: documentType }, { format: "string" })
   const htmlCitation = cite.format("bibliography", {
-    format: "html",
+    format: format,
     template: "apa",
     lang: "en-US",
   })
   const inTextCitation = cite.format("citation", {
-    format: "html",
+    format: format,
     template: "apa",
     lang: "en-US",
   })
 
   return {
-    html: htmlCitation,
+    convertedCitation: htmlCitation,
     inText: inTextCitation,
   }
 }

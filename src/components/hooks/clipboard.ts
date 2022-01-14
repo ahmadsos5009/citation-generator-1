@@ -1,5 +1,6 @@
 import React, { useCallback } from "react"
-import { CitationOutput } from "../../types"
+import { Citation } from "../../types"
+import { generateCitation } from "../utilities/citation_generator"
 
 type ClipboardProps = {
   handleClick: (event: React.MouseEvent<HTMLElement>) => void
@@ -10,7 +11,7 @@ type ClipboardProps = {
   showAlert: boolean
 }
 
-export default (citation?: CitationOutput): ClipboardProps => {
+export default (citation: Citation, documentType: string): ClipboardProps => {
   const [showAlert, setShowAlert] = React.useState(false)
 
   const handleClick = useCallback(
@@ -19,14 +20,20 @@ export default (citation?: CitationOutput): ClipboardProps => {
         return
       }
 
-      const target = ((event.target as HTMLElement)?.parentNode as HTMLButtonElement)
-        .value
+      const target = (event.currentTarget as HTMLButtonElement).value
+
       let clipboardText = ""
+      const { convertedCitation, inText } = generateCitation(
+        citation,
+        documentType,
+        "text",
+      )
 
       if (target === "citation") {
-        clipboardText = citation.html
-      } else {
-        clipboardText = citation.inText
+        clipboardText = convertedCitation
+      }
+      if (target === "in-text") {
+        clipboardText = inText
       }
 
       (async () => {

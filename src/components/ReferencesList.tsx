@@ -22,12 +22,13 @@ import DeleteIcon from "@mui/icons-material/Delete"
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp"
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import styled from "styled-components"
-import { generateCitation } from "./utilities/citation_generator"
+import { generateCitation, generateCitations } from "./utilities/citation_generator"
 import { DBContext } from "../provider/DBProvider"
 import { CitationDocumentType, CitationJSDocumentType } from "../types"
 import { ReferenceExportButton, ReferenceFilterButton } from "./Buttons"
 import { ReferencesListContext } from "../provider/ReferencesListProvider"
 import { grey } from "@mui/material/colors"
+import { navigate } from "gatsby"
 
 export const ReferencesList: React.FC = () => {
   const { state, showCitationsList, dispatch } = useContext(DBContext)
@@ -36,13 +37,13 @@ export const ReferencesList: React.FC = () => {
 
   const citations = useMemo(() => {
     const citations: {
-      view: { html: string; inText: string }
+      view: { convertedCitation: string; inText: string }
       citationID: string
     }[] = []
     filters.map((doc) =>
       Object.values(state.value[doc]).map((c) => {
         citations.push({
-          view: generateCitation(c, CitationJSDocumentType[doc]),
+          view: generateCitation(c, CitationJSDocumentType[doc], "html"),
           citationID: c.id,
         })
       }),
@@ -154,7 +155,7 @@ export const ReferencesList: React.FC = () => {
                 <Stack width="80%">
                   <Box
                     dangerouslySetInnerHTML={{
-                      __html: citation?.view.html || "",
+                      __html: citation?.view.convertedCitation || "",
                     }}
                   />
 
@@ -203,7 +204,8 @@ export const ReferencesList: React.FC = () => {
 
 const ListHeader: React.FC = () => {
   const [selectAll, setSelectedAll] = useState(false)
-  const { setSelectedCitations, filters } = useContext(ReferencesListContext)
+  const { setSelectedCitations, selectedCitations, filters } =
+    useContext(ReferencesListContext)
   const { state } = useContext(DBContext)
 
   const onSelectAllClick = useCallback(() => {
@@ -218,6 +220,18 @@ const ListHeader: React.FC = () => {
     }
     setSelectedAll(!selectAll)
   }, [setSelectedAll, selectAll, filters, setSelectedCitations, state.value])
+
+  const onPreviewClick = useCallback(() => {
+    // TODO:: Abstract to utils method
+    let citations = ""
+    filters.map((doc) => {
+      const citation = Object.values(state.value[doc])
+        .filter((c) => selectedCitations.includes(c.id) && c)
+        .map((c) => ({ ...c }))
+      citations = citations.concat(generateCitations(citation) + "\n")
+    })
+    return navigate("/citationPreview", { state: { htmlCitations: citations } })
+  }, [filters, state.value, selectedCitations])
 
   return (
     <Box>
@@ -234,7 +248,7 @@ const ListHeader: React.FC = () => {
       >
         <Box>
           <ReferenceFilterButton />
-          <IconButton>
+          <IconButton onClick={onPreviewClick}>
             <RemoveRedEyeIcon />
           </IconButton>
         </Box>
