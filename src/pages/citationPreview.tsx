@@ -2,7 +2,8 @@ import * as React from "react"
 import { Box, Container, Typography } from "@mui/material"
 import Seo from "../components/Seo"
 import Layout from "../components/pages/Layout"
-import CitationEditor from "../components/editor/CitationEditor"
+import Loadable from "@loadable/component"
+const CitationEditor = Loadable(() => import("../components/editor/CitationEditor"))
 
 const CitationPreviewPage: React.FC = () => {
   return (
