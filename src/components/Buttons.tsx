@@ -206,11 +206,11 @@ export const ReferenceExportButton: React.FC = () => {
           buttonIcon={<ArticleIcon sx={{ color: blue[500] }} />}
         />
         {/*  TODO:: find way to convert input to BibTax */}
-        {/*<ExportFileNameModel*/}
-        {/*  buttonText="BibTax"*/}
-        {/*  closeDropDown={handleClose}*/}
-        {/*  buttonIcon={<ArticleIcon color="secondary" />}*/}
-        {/*/>*/}
+        <ExportFileNameModel
+          buttonText="BibTax"
+          closeDropDown={handleClose}
+          buttonIcon={<ArticleIcon color="secondary" />}
+        />
       </Menu>
     </>
   )

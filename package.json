@@ -6,6 +6,7 @@
   "author": "Ahmad Souqi",
   "dependencies": {
     "@citation-js/core": "^0.5.4",
+    "@citation-js/plugin-bibtex": "^0.5.5",
     "@citation-js/plugin-csl": "^0.5.4",
     "@ckeditor/ckeditor5-build-decoupled-document": "^31.1.0",
     "@ckeditor/ckeditor5-react": "^3.0.3",

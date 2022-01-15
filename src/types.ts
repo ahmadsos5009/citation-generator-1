@@ -37,6 +37,7 @@ export interface Citation {
   page?: string
   URL?: string
   DOI?: string
+  type?: string
 }
 
 export interface Author {

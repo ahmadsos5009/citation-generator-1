@@ -32,7 +32,7 @@ export function generateCitation(
   }
 }
 
-const cleansingCitation = (citation: Citation) => {
+export const cleansingCitation = (citation: Citation) => {
   const keys = {
     articleTitle: "title",
     journalTitle: "container-title",
