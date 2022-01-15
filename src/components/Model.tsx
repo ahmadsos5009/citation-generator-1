@@ -9,10 +9,15 @@ import {
   Snackbar,
   Typography,
 } from "@mui/material"
-import { export_pdf, export_word } from "./utilities/citation_exporter"
+import {
+  export_bibTex,
+  export_pdf,
+  export_word,
+} from "./utilities/citation_exporter"
 import { ReferencesListContext } from "../provider/ReferencesListProvider"
 import { DBContext } from "../provider/DBProvider"
 import { generateCitations } from "./utilities/citation_generator"
+import { Citation, CitationJSDocumentType } from "../types"
 
 const style = {
   position: "absolute" as const,
@@ -57,17 +62,27 @@ export const ExportFileNameModel: React.FC<{
 
   const { state } = useContext(DBContext)
 
-  const citationHtml = useMemo(() => {
-    let citations = ""
+  const { citationHtml, citationsJson } = useMemo(() => {
+    let citationHtml = ""
 
     filters.map((doc) => {
       const citation = Object.values(state.value[doc])
         .filter((c) => selectedCitations.includes(c.id) && c)
         .map((c) => ({ ...c }))
-      citations = citations.concat(generateCitations(citation) + "\n")
+      citationHtml = citationHtml.concat(generateCitations(citation) + "\n")
     })
 
-    return citations
+    const citationsJson: Citation[] = []
+    filters.map((doc) =>
+      Object.values(state.value[doc])
+        .filter((c) => selectedCitations.includes(c.id) && c)
+        .map((c) => citationsJson.push({ ...c, type: CitationJSDocumentType[doc] })),
+    )
+
+    return {
+      citationHtml,
+      citationsJson,
+    }
   }, [filters, state.value, selectedCitations])
 
   const handleDownloadClick = useCallback(() => {
@@ -79,11 +94,11 @@ export const ExportFileNameModel: React.FC<{
         export_word(citationHtml, fileName)
         break
       case "BibTax":
-        export_word(citationHtml, fileName)
+        export_bibTex(citationsJson, fileName)
         break
     }
     handleClose()
-  }, [citationHtml, fileName])
+  }, [citationHtml, citationsJson, fileName])
 
   const closeSnackbar = useCallback(() => setShowAlert(false), [setShowAlert])
 

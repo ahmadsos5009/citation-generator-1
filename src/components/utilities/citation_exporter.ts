@@ -1,3 +1,10 @@
+import { Cite } from "@citation-js/core"
+import { Citation } from "../../types"
+import { cleansingCitation } from "./citation_generator"
+
+require("@citation-js/plugin-csl")
+require("@citation-js/plugin-bibtex")
+
 export const export_word = (citationHtml: string, fileName: string): void => {
   const fileType =
     "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
@@ -32,4 +39,23 @@ export const export_pdf = async (citationHtml: string, fileName: string) => {
     // @ts-ignore
     .createPdf({ content: pdfData }, null, null, pdfFonts.pdfMake.vfs)
     .download(fileName)
+}
+
+export const export_bibTex = (citations: Citation[], fileName: string): void => {
+  const cite = Cite(
+    citations.map((c) => cleansingCitation(c)),
+    { format: "string" },
+  )
+
+  const bibTex = cite.format("bibtex", {
+    format: "text",
+    template: "apa",
+    lang: "en-US",
+  })
+
+  const link = document.createElement("a")
+
+  link.href = `data:text/x-tex;charset=UTF-8,` + encodeURIComponent(bibTex)
+  link.download = `${fileName}.bib`
+  link.click()
 }
