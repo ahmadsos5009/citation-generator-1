@@ -2,7 +2,7 @@ module.exports = {
   pathPrefix: "/citation-generator",
   siteMetadata: {
     title: "Citation Generator",
-    description: "Create Citation based on CSL styles",
+    description: "Create Citation based on Csl_code styles",
     author: "Ahmad Souqi",
     siteUrl: process.env.APP_URL,
   },
@@ -18,6 +18,13 @@ module.exports = {
     },
     "gatsby-transformer-sharp",
     "gatsby-plugin-sharp",
+    "gatsby-transformer-json",
+    {
+      resolve: "gatsby-source-filesystem",
+      options: {
+        path: `${__dirname}/data`,
+      },
+    },
     {
       resolve: "gatsby-plugin-manifest",
       options: {

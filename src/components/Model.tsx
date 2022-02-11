@@ -65,7 +65,7 @@ export const ExportFileNameModel: React.FC<{
     [setFileName],
   )
 
-  const { state } = useContext(DBContext)
+  const { state, format } = useContext(DBContext)
 
   const { citationHtml, citationsJson } = useMemo(() => {
     let citationHtml = ""
@@ -74,7 +74,7 @@ export const ExportFileNameModel: React.FC<{
       const citation = Object.values(state.value[doc])
         .filter((c) => selectedCitations.includes((c as CitationWithID).id) && c)
         .map((c) => ({ ...c }))
-      citationHtml = citationHtml.concat(generateCitations(citation) + "\n")
+      citationHtml = citationHtml.concat(generateCitations(citation, format) + "\n")
     })
 
     const citationsJson: Citation & { type: DocumentType }[] = []

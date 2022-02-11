@@ -23,7 +23,7 @@ export const CitationJSDocumentType: {
   [CitationDocumentType.WEBSITE]: "webpage",
 }
 
-export type CitationStyle = "apa"
+export type CitationStyle = "apa" | "ieee"
 
 export enum Events {
   CITATION = "fill-citation-field",

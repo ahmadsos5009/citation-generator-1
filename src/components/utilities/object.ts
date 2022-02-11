@@ -1,4 +1,5 @@
 import { Citation } from "../../types"
+import { User } from "../../cslTypes/type"
 
 export const isEmptyObject = (citation: Citation): boolean =>
   Object.values(citation).every((value) => {
@@ -7,18 +8,21 @@ export const isEmptyObject = (citation: Citation): boolean =>
         return value === undefined || value === ""
       case "number":
         return value === undefined
-      case "object":
-        // console.log(value)
-        return false
-      // return (
-      //   value === undefined ||
-      //   !value.find(
-      //     (auth: Author) =>
-      //       (auth.given && auth.given.length > 0) ||
-      //       (auth.family && auth.family.length > 0),
-      //   )
-      // )
+      case "object": {
+        if (value instanceof Array && value.length > 0) {
+          return !(
+            isObjectWithValue(value[0], "family") ||
+            isObjectWithValue(value[0], "given") ||
+            isObjectWithValue(value[0], "suffix")
+          )
+        } else return false
+      }
       default:
         return false
     }
   })
+
+const isObjectWithValue = (obj: User, key: "family" | "given" | "suffix") => {
+  const length = obj[key]?.length
+  return length && length > 0
+}

@@ -4,7 +4,12 @@
 
 #### Create Citation online rapidly 🚀, with support for a large number of citation styles, for Book, Journal articles.
 
-#### 🧐 CSL styles supported
+#### 🧐 Csl_code styles supported
 
     ├── apa
-    ├── mit
+    ├── ieee
+
+#### Steps To Add a new CSL Style:
+* Add mdx file [MDX](https://github.com/asouqi/citation-generator/blob/master/src/mdx)
+* Add new style to the [CitationStyle](https://github.com/asouqi/citation-generator/blob/master/src/types.ts#L26) type
+* Add [CSL XML](https://csl.mendeley.com/searchByName/) to new [json object](https://github.com/asouqi/citation-generator/blob/master/data/csl_code.json)

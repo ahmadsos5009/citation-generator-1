@@ -1,5 +1,5 @@
 import { Cite } from "@citation-js/core"
-import { Citation } from "../../types"
+import { Citation, CitationStyle } from "../../types"
 
 require("@citation-js/plugin-csl")
 
@@ -7,21 +7,18 @@ export function generateCitation(
   citation: Citation,
   documentType: string,
   format: "html" | "text",
+  template: CitationStyle,
 ): { convertedCitation: string; inText: string } {
-  // TODO:: add styles configuration
-  // const cslPlugin = plugins.config.get('@csl');
-  // cslPlugin.templates.add('apa', '');
-
   const cite = Cite({ ...citation, type: documentType }, { format: "string" })
   const htmlCitation = cite.format("bibliography", {
     format: format,
-    template: "apa",
     lang: "en-US",
+    template,
   })
   const inTextCitation = cite.format("citation", {
     format: format,
-    template: "apa",
     lang: "en-US",
+    template,
   })
 
   return {
@@ -30,12 +27,15 @@ export function generateCitation(
   }
 }
 
-export const generateCitations = (citations: Citation[]): string => {
+export const generateCitations = (
+  citations: Citation[],
+  template: CitationStyle,
+): string => {
   const cite = Cite(citations, { format: "string" })
 
   return cite.format("bibliography", {
     format: "html",
-    template: "apa",
     lang: "en-US",
+    template,
   })
 }
