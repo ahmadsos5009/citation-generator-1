@@ -74,7 +74,7 @@ const reducer = (state: DBState, action: IDBAction): DBState => {
       if (!citationID) return state
       const dbCitation = getDBCitations(state.format)
       const citationDocument = getDBCitationDocument(dbCitation, citationID)
-      console.log(citationDocument)
+
       if (
         setDocumentType &&
         citationDocument &&

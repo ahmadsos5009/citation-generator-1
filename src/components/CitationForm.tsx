@@ -105,6 +105,7 @@ const DocumentForm: React.FC<{ documentType: CitationDocumentType }> = ({
         state[documentType],
         CitationJSDocumentType[documentType],
         "html",
+        DB.format,
       )
       setCitation({
         html: convertedCitation,
@@ -118,7 +119,7 @@ const DocumentForm: React.FC<{ documentType: CitationDocumentType }> = ({
 
   const onCiteResource = useCallback(() => {
     // TODO:: add validation
-    if (documentType in state) {
+    if (documentType in state && !isEmptyObject(state[documentType])) {
       DB.dispatch({
         type: "save",
         citationDocument: documentType,
@@ -178,6 +179,7 @@ const DocumentForm: React.FC<{ documentType: CitationDocumentType }> = ({
         <Box>
           {fields.map((field, index) => (
             <Fragment key={index.toString()}>
+              {/* TODO:: move logic up */}
               {((field === "issued" || field === "accessed") && (
                 <>
                   <ContributorsInput documentType={documentType} />
@@ -229,8 +231,5 @@ const DocumentForm: React.FC<{ documentType: CitationDocumentType }> = ({
     </Box>
   )
 }
-
-const isEmpty = (text: string | number | undefined) =>
-  !text || (!!text && (text as string).length < 1)
 
 export default Form

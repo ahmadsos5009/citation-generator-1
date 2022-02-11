@@ -26,16 +26,19 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
 import styled from "styled-components"
 import { generateCitation, generateCitations } from "./utilities/citation_generator"
 import { DBContext } from "../provider/DBProvider"
-import { CitationDocumentType, CitationJSDocumentType } from "../types"
+import { Citation, CitationDocumentType, CitationJSDocumentType } from "../types"
 import { ReferenceExportButton, ReferenceFilterButton } from "./Buttons"
 import { ReferencesListContext } from "../provider/ReferencesListProvider"
 import { grey } from "@mui/material/colors"
 import { navigate } from "gatsby"
+import { StoreContext } from "../provider/Store"
 
 export const ReferencesList: React.FC<{
   setDocumentType: React.Dispatch<React.SetStateAction<CitationDocumentType>>
 }> = ({ setDocumentType }) => {
-  const { state, showCitationsList, dispatch } = useContext(DBContext)
+  const { state, showCitationsList, dispatch, format } = useContext(DBContext)
+  const Store = useContext(StoreContext)
+
   const { filters, selectedCitations, setSelectedCitations } =
     useContext(ReferencesListContext)
 
@@ -47,7 +50,7 @@ export const ReferencesList: React.FC<{
     filters.map((doc) =>
       Object.values(state.value[doc]).map((c) => {
         citations.push({
-          view: generateCitation(c, CitationJSDocumentType[doc], "html"),
+          view: generateCitation(c, CitationJSDocumentType[doc], "html", format),
           citationID: c.id,
         })
       }),
@@ -72,6 +75,7 @@ export const ReferencesList: React.FC<{
     (event: React.MouseEvent<HTMLElement>) => {
       if (event.currentTarget) {
         const citationID = (event.currentTarget as HTMLButtonElement).value
+        Store.dispatch({ type: "clear", documentType: CitationDocumentType.JOURNAL })
         dispatch({
           type: "edit",
           citationID,
@@ -211,7 +215,7 @@ const ListHeader: React.FC = () => {
   const [selectAll, setSelectedAll] = useState(false)
   const { setSelectedCitations, selectedCitations, filters } =
     useContext(ReferencesListContext)
-  const { state } = useContext(DBContext)
+  const { state, format } = useContext(DBContext)
 
   const onSelectAllClick = useCallback(() => {
     if (!selectAll) {
@@ -231,22 +235,24 @@ const ListHeader: React.FC = () => {
 
   const onPreviewClick = useCallback(() => {
     // TODO:: Abstract to utils method
-    let citations = "",
-      showAlert = true
+    let citations: Citation[] = []
     filters.map((doc) => {
-      const citation = Object.values(state.value[doc])
-        .filter((c) => selectedCitations.includes(c.id) && c)
-        .map((c) => ({ ...c }))
-
-      if (citation.length > 0) showAlert = false
-
-      citations = citations.concat(generateCitations(citation) + "\n")
+      citations = [
+        ...citations,
+        ...Object.values(state.value[doc])
+          .filter((c) => selectedCitations.includes(c.id) && c)
+          .map((c) => ({ ...c })),
+      ]
     })
 
-    if (showAlert) {
+    if (citations.length < 1) {
       setShowAlert(true)
-    } else
-      return navigate("/citationPreview", { state: { htmlCitations: citations } })
+    } else {
+      const bibliographyHTML = generateCitations(citations, format)
+      return navigate("/citationPreview", {
+        state: { htmlCitations: bibliographyHTML },
+      })
+    }
   }, [filters, state.value, selectedCitations, setShowAlert])
 
   return (
