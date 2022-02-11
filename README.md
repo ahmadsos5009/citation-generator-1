@@ -4,7 +4,7 @@
 
 #### Create Citation online rapidly 🚀, with support for a large number of citation styles, for Book, Journal articles.
 
-#### 🧐 Csl_code styles supported
+#### 🧐 CSL styles supported
 
     ├── apa
     ├── ieee
