@@ -1,20 +1,16 @@
 import React, { Reducer, useCallback, useContext, useReducer } from "react"
-import { Author, Citation, CitationDocument, CitationDocumentType } from "../types"
+import { Citation, CitationDocument, CitationDocumentType } from "../types"
+import { User } from "../cslTypes/type"
 
-// @ts-ignore
 export const StoreContext = React.createContext<{
   state: CitationDocument
   dispatch: React.Dispatch<ICitationAction>
 }>({
   state: {
-    // @ts-ignore
-    journal: {},
-    // @ts-ignore
-    book: {},
-    // @ts-ignore
-    report: {},
-    // @ts-ignore
-    website: {},
+    journal: { id: "" },
+    book: { id: "" },
+    report: { id: "" },
+    website: { id: "" },
   },
   dispatch: () => {
     console.error("Unmounted")
@@ -25,7 +21,7 @@ interface ICitationAction {
   type: "set" | "clear" | "fill"
   id?: string
   documentType?: string
-  value?: string | number | Author[] | Citation
+  value?: string | number | User[] | Citation | { "date-parts": string[] }
 }
 
 const reducer = (
@@ -39,22 +35,13 @@ const reducer = (
       state[documentType][id] = value
       return { ...state }
     case "clear":
-      return {
-        // @ts-ignore
-        journal: {},
-        // @ts-ignore
-        book: {},
-        // @ts-ignore
-        report: {},
-        // @ts-ignore
-        website: {},
-      }
+      // @ts-ignore
+      state[documentType] = {}
+      return { ...state }
     case "fill":
       // @ts-ignore
       state[documentType] = value
-      return {
-        ...state,
-      }
+      return { ...state }
     default:
       throw new Error()
   }

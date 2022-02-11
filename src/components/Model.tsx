@@ -17,7 +17,12 @@ import {
 import { ReferencesListContext } from "../provider/ReferencesListProvider"
 import { DBContext } from "../provider/DBProvider"
 import { generateCitations } from "./utilities/citation_generator"
-import { Citation, CitationJSDocumentType } from "../types"
+import {
+  Citation,
+  CitationJSDocumentType,
+  CitationWithID,
+  DocumentType,
+} from "../types"
 
 const style = {
   position: "absolute" as const,
@@ -67,15 +72,15 @@ export const ExportFileNameModel: React.FC<{
 
     filters.map((doc) => {
       const citation = Object.values(state.value[doc])
-        .filter((c) => selectedCitations.includes(c.id) && c)
+        .filter((c) => selectedCitations.includes((c as CitationWithID).id) && c)
         .map((c) => ({ ...c }))
       citationHtml = citationHtml.concat(generateCitations(citation) + "\n")
     })
 
-    const citationsJson: Citation[] = []
+    const citationsJson: Citation & { type: DocumentType }[] = []
     filters.map((doc) =>
       Object.values(state.value[doc])
-        .filter((c) => selectedCitations.includes(c.id) && c)
+        .filter((c) => selectedCitations.includes((c as CitationWithID).id) && c)
         .map((c) => citationsJson.push({ ...c, type: CitationJSDocumentType[doc] })),
     )
 

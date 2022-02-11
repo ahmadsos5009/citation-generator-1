@@ -1,4 +1,4 @@
-import { Author, Citation } from "../../types"
+import { Citation } from "../../types"
 
 export const isEmptyObject = (citation: Citation): boolean =>
   Object.values(citation).every((value) => {
@@ -8,14 +8,16 @@ export const isEmptyObject = (citation: Citation): boolean =>
       case "number":
         return value === undefined
       case "object":
-        return (
-          value === undefined ||
-          !value.find(
-            (auth: Author) =>
-              (auth.given && auth.given.length > 0) ||
-              (auth.family && auth.family.length > 0),
-          )
-        )
+        // console.log(value)
+        return false
+      // return (
+      //   value === undefined ||
+      //   !value.find(
+      //     (auth: Author) =>
+      //       (auth.given && auth.given.length > 0) ||
+      //       (auth.family && auth.family.length > 0),
+      //   )
+      // )
       default:
         return false
     }

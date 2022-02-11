@@ -1,13 +1,19 @@
 import React, { Dispatch, Reducer, useEffect, useReducer, useState } from "react"
-import { Citation, CitationStyle, DBCitations, CitationDocumentType } from "../types"
+import {
+  CitationStyle,
+  DBCitations,
+  CitationDocumentType,
+  CitationWithID,
+} from "../types"
 import {
   deleteCitation,
+  getDBCitationDocument,
   getDBCitations,
   storeCitation,
 } from "../components/utilities/DB"
 import {
-  clearJournalFields,
-  fillJournalFields,
+  clearCitationFields,
+  fillCitationFields,
 } from "../components/utilities/html_fields"
 
 type DBState = { value: DBCitations; format: CitationStyle; event?: CustomEvent }
@@ -28,33 +34,60 @@ export const DBContext = React.createContext<{
 
 interface IDBAction {
   type: "save" | "delete" | "edit" | "initialize"
-  citationDocument: CitationDocumentType
-  citation?: Citation
+  citationDocument?: CitationDocumentType
+  citation?: CitationWithID
   citationID?: string
   dbCitations?: DBCitations
+  setDocumentType?: React.Dispatch<React.SetStateAction<CitationDocumentType>>
 }
 
 const reducer = (state: DBState, action: IDBAction): DBState => {
-  const { type, citationDocument, citation, citationID, dbCitations } = action
+  const {
+    type,
+    citation,
+    citationID,
+    dbCitations,
+    citationDocument,
+    setDocumentType,
+  } = action
   switch (type) {
     case "save":
-      if (!citation) return state
+      if (!citationDocument || !citation) return state
       return {
         ...state,
         value: storeCitation(citation, citationDocument, state.format),
       }
-    case "delete":
+    case "delete": {
       if (!citationID) return state
+      const citationDocument = getDBCitationDocument(
+        getDBCitations(state.format),
+        citationID,
+      )
+
+      if (!setDocumentType || !citationDocument) return state
       return {
         ...state,
         value: deleteCitation(citationID, citationDocument, state.format),
       }
+    }
     case "edit": {
       if (!citationID) return state
       const dbCitation = getDBCitations(state.format)
-      if (dbCitation[citationDocument][citationID]) {
-        clearJournalFields()
-        fillJournalFields(dbCitation[citationDocument][citationID])
+      const citationDocument = getDBCitationDocument(dbCitation, citationID)
+      console.log(citationDocument)
+      if (
+        setDocumentType &&
+        citationDocument &&
+        dbCitation[citationDocument][citationID]
+      ) {
+        setDocumentType(citationDocument)
+        setTimeout(() => {
+          clearCitationFields(citationDocument)
+          fillCitationFields(
+            citationDocument,
+            dbCitation[citationDocument][citationID],
+          )
+        }, 150)
       }
       return state
     }

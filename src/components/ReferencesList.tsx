@@ -6,12 +6,14 @@ import React, {
   useState,
 } from "react"
 import {
+  Alert,
   Box,
   Checkbox,
   Container,
   IconButton,
   List,
   ListItem,
+  Snackbar,
   Stack,
   Typography,
 } from "@mui/material"
@@ -30,7 +32,9 @@ import { ReferencesListContext } from "../provider/ReferencesListProvider"
 import { grey } from "@mui/material/colors"
 import { navigate } from "gatsby"
 
-export const ReferencesList: React.FC = () => {
+export const ReferencesList: React.FC<{
+  setDocumentType: React.Dispatch<React.SetStateAction<CitationDocumentType>>
+}> = ({ setDocumentType }) => {
   const { state, showCitationsList, dispatch } = useContext(DBContext)
   const { filters, selectedCitations, setSelectedCitations } =
     useContext(ReferencesListContext)
@@ -56,8 +60,8 @@ export const ReferencesList: React.FC = () => {
       if (event.currentTarget) {
         dispatch({
           type: "delete",
-          citationDocument: CitationDocumentType.JOURNAL,
           citationID: (event.currentTarget as HTMLButtonElement).value,
+          setDocumentType,
         })
       }
     },
@@ -67,10 +71,11 @@ export const ReferencesList: React.FC = () => {
   const handleOnEditClick = useCallback(
     (event: React.MouseEvent<HTMLElement>) => {
       if (event.currentTarget) {
+        const citationID = (event.currentTarget as HTMLButtonElement).value
         dispatch({
           type: "edit",
-          citationDocument: CitationDocumentType.JOURNAL,
-          citationID: (event.currentTarget as HTMLButtonElement).value,
+          citationID,
+          setDocumentType,
         })
       }
     },
@@ -221,17 +226,28 @@ const ListHeader: React.FC = () => {
     setSelectedAll(!selectAll)
   }, [setSelectedAll, selectAll, filters, setSelectedCitations, state.value])
 
+  const [showAlert, setShowAlert] = useState(false)
+  const closeSnackbar = useCallback(() => setShowAlert(false), [setShowAlert])
+
   const onPreviewClick = useCallback(() => {
     // TODO:: Abstract to utils method
-    let citations = ""
+    let citations = "",
+      showAlert = true
     filters.map((doc) => {
       const citation = Object.values(state.value[doc])
         .filter((c) => selectedCitations.includes(c.id) && c)
         .map((c) => ({ ...c }))
+
+      if (citation.length > 0) showAlert = false
+
       citations = citations.concat(generateCitations(citation) + "\n")
     })
-    return navigate("/citationPreview", { state: { htmlCitations: citations } })
-  }, [filters, state.value, selectedCitations])
+
+    if (showAlert) {
+      setShowAlert(true)
+    } else
+      return navigate("/citationPreview", { state: { htmlCitations: citations } })
+  }, [filters, state.value, selectedCitations, setShowAlert])
 
   return (
     <Box>
@@ -251,6 +267,17 @@ const ListHeader: React.FC = () => {
           <IconButton onClick={onPreviewClick}>
             <RemoveRedEyeIcon />
           </IconButton>
+
+          <Snackbar
+            open={showAlert}
+            autoHideDuration={2000}
+            onClose={closeSnackbar}
+            anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+          >
+            <Alert onClose={closeSnackbar} severity="warning" sx={{ width: "100%" }}>
+              Select All Citations / Or at least one of them
+            </Alert>
+          </Snackbar>
         </Box>
         <Box marginRight="18px">
           <ReferenceExportButton />

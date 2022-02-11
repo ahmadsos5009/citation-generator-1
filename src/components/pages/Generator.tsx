@@ -36,7 +36,9 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
             m: 1,
           }}
         >
-          <Container>
+          <Container
+            sx={{ border: "1px solid rgba(0, 0, 0, 0.12);", borderRadius: "10px" }}
+          >
             <CardContent sx={{ flexGrow: 1 }}>
               <Typography
                 component="h1"
@@ -79,7 +81,7 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
           </Container>
 
           <ReferencesListProvider>
-            <ReferencesList />
+            <ReferencesList setDocumentType={setDocumentType} />
           </ReferencesListProvider>
         </Box>
       </Layout>

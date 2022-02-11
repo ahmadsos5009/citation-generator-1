@@ -1,3 +1,10 @@
+import {
+  BookCitation,
+  JournalArticleCitation,
+  ReportCitation,
+  WebsiteCitation,
+} from "./cslTypes/type"
+
 export enum CitationDocumentType {
   JOURNAL = "journal",
   BOOK = "book",
@@ -5,7 +12,11 @@ export enum CitationDocumentType {
   WEBSITE = "website",
 }
 
-export const CitationJSDocumentType: { [k in CitationDocumentType]: string } = {
+export type DocumentType = "article-journal" | "report" | "book" | "webpage"
+
+export const CitationJSDocumentType: {
+  [k in CitationDocumentType]: DocumentType
+} = {
   [CitationDocumentType.JOURNAL]: "article-journal",
   [CitationDocumentType.REPORT]: "report",
   [CitationDocumentType.BOOK]: "book",
@@ -19,26 +30,15 @@ export enum Events {
   AUTHORS = "fill-authors-field",
 }
 
-export type CitationDocument = { [k in CitationDocumentType]: Citation }
+export type Citation =
+  | JournalArticleCitation
+  | ReportCitation
+  | BookCitation
+  | WebsiteCitation
 
-export interface Citation {
-  id: string
-  articleTitle: string
-  journalTitle: string
-  year: number
-  authors: Author[]
-  month?: number
-  from?: number
-  to?: number
-  volume?: number
-  issue?: number
-  link?: string
-  annotation?: string
-  page?: string
-  URL?: string
-  DOI?: string
-  type?: string
-}
+export type CitationWithID = Citation & { id: string }
+
+export type CitationDocument = { [k in CitationDocumentType]: CitationWithID }
 
 export interface Author {
   id: string
@@ -52,5 +52,5 @@ export interface CitationOutput {
 }
 
 export type DBCitations = {
-  [k in CitationDocumentType]: { [k: string]: Citation }
+  [k in CitationDocumentType]: { [k: string]: CitationWithID }
 }
