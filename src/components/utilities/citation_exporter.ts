@@ -1,6 +1,5 @@
 import { Cite } from "@citation-js/core"
-import { Citation } from "../../types"
-import { cleansingCitation } from "./citation_generator"
+import { Citation, DocumentType } from "../../types"
 
 require("@citation-js/plugin-csl")
 require("@citation-js/plugin-bibtex")
@@ -41,11 +40,11 @@ export const export_pdf = async (citationHtml: string, fileName: string) => {
     .download(fileName)
 }
 
-export const export_bibTex = (citations: Citation[], fileName: string): void => {
-  const cite = Cite(
-    citations.map((c) => cleansingCitation(c)),
-    { format: "string" },
-  )
+export const export_bibTex = (
+  citations: Citation & { type: DocumentType }[],
+  fileName: string,
+): void => {
+  const cite = Cite(citations, { format: "string" })
 
   const bibTex = cite.format("bibtex", {
     format: "text",

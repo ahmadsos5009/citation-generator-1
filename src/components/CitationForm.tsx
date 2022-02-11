@@ -1,58 +1,109 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react"
+import React, {
+  Fragment,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import { Alert, Box, Snackbar, Stack } from "@mui/material"
-import {
-  AuthorsInput,
-  LinkInput,
-  NumberFieldInput,
-  PagesInput,
-  TextFieldInput,
-} from "./Input"
 import { StoreContext } from "../provider/Store"
 import { CiteResourceButton, ClearFields } from "./Buttons"
-import { Citation, CitationDocumentType, CitationOutput, Events } from "../types"
+import {
+  Citation,
+  CitationDocumentType,
+  CitationJSDocumentType,
+  CitationOutput,
+  Events,
+} from "../types"
 import { generateCitation } from "./utilities/citation_generator"
 import { isEmptyObject } from "./utilities/object"
 import { useClipboard } from "./hooks"
 import { OnFlyCitationBox } from "./Citation"
 import { DBContext } from "../provider/DBProvider"
-import { clearJournalFields, fillJournalFields } from "./utilities/html_fields"
+import { clearCitationFields, fillCitationFields } from "./utilities/html_fields"
+import { documentFields, labels } from "../cslTypes/fieldsMapping"
+import { ContributorsInput, DateField, LinkInput, TextField } from "./Inputs"
+
+export const eliminatedFields: { [key in CitationDocumentType]: string[] } = {
+  [CitationDocumentType.JOURNAL]: [
+    "abstract",
+    "shortTitle",
+    "journalAbbreviation",
+    "language",
+    "ISSN",
+    "accessed",
+    "source",
+    "call-number",
+    "note",
+  ],
+  [CitationDocumentType.BOOK]: [
+    "abstract",
+    "collection-title",
+    "collection-number",
+    "number-of-volumes",
+    "publisher-place",
+    "number-of-pages",
+    "language",
+    "ISBN",
+    "source",
+    "accessed",
+    "call-number",
+    "note",
+  ],
+  [CitationDocumentType.WEBSITE]: [
+    "abstract",
+    "publisher-place",
+    "language",
+    "source",
+    "accessed",
+    "call-number",
+    "note",
+  ],
+  [CitationDocumentType.REPORT]: [
+    "abstract",
+    "language",
+    "note",
+    "source",
+    "accessed",
+    "call-number",
+  ],
+}
 
 const Form: React.FC<{ type: CitationDocumentType }> = ({ type }) => {
   switch (type) {
     case CitationDocumentType.JOURNAL:
-      return <JournalForm />
+      return <DocumentForm documentType={CitationDocumentType.JOURNAL} />
     case CitationDocumentType.BOOK:
-      return <span>BOOK</span>
+      return <DocumentForm documentType={CitationDocumentType.BOOK} />
     case CitationDocumentType.REPORT:
-      return <span>REPORT</span>
+      return <DocumentForm documentType={CitationDocumentType.REPORT} />
     case CitationDocumentType.WEBSITE:
-      return <span>WEBSITE</span>
+      return <DocumentForm documentType={CitationDocumentType.WEBSITE} />
     default:
       return <></>
   }
 }
 
-const JournalForm: React.FC = () => {
+const DocumentForm: React.FC<{ documentType: CitationDocumentType }> = ({
+  documentType,
+}) => {
   const refNode = useRef<HTMLDivElement>()
-  const [error, setError] = useState({
-    articleTitle: false,
-    journalTitle: false,
-    year: false,
-  })
 
   const { state, dispatch } = useContext(StoreContext)
   const DB = useContext(DBContext)
   const [citation, setCitation] = useState<CitationOutput | undefined>()
 
   useEffect(() => {
-    fillJournalFields(state.journal)
+    fillCitationFields(documentType, state[documentType])
   }, [])
 
   useEffect(() => {
-    if (!isEmptyObject(state.journal)) {
+    if (!isEmptyObject(state[documentType])) {
       const { convertedCitation, inText } = generateCitation(
-        state.journal,
-        "article-journal",
+        state[documentType],
+        CitationJSDocumentType[documentType],
         "html",
       )
       setCitation({
@@ -66,41 +117,26 @@ const JournalForm: React.FC = () => {
   }, [state])
 
   const onCiteResource = useCallback(() => {
-    const { articleTitle, journalTitle, year } = state.journal
-
-    // TODO:: add pages validation
-    if (isEmpty(articleTitle) || isEmpty(journalTitle) || isEmpty(year)) {
-      setError({
-        articleTitle: isEmpty(articleTitle),
-        journalTitle: isEmpty(journalTitle),
-        year: isEmpty(year),
+    // TODO:: add validation
+    if (documentType in state) {
+      DB.dispatch({
+        type: "save",
+        citationDocument: documentType,
+        citation: state[documentType],
       })
-    } else {
-      setError({
-        articleTitle: false,
-        journalTitle: false,
-        year: false,
-      })
-      if ("journal" in state) {
-        DB.dispatch({
-          type: "save",
-          citationDocument: CitationDocumentType.JOURNAL,
-          citation: state.journal,
-        })
-        clearJournalFields()
+      clearCitationFields(documentType)
 
-        dispatch({ type: "clear" })
+      dispatch({ type: "clear", documentType })
 
-        if (!DB.showCitationsList) {
-          DB.setShowCitationsList(true)
-        }
+      if (!DB.showCitationsList) {
+        DB.setShowCitationsList(true)
       }
     }
-  }, [setCitation, state.journal])
+  }, [setCitation, state[documentType]])
 
   const { showAlert, handleClick, handleClose } = useClipboard(
-    state.journal,
-    "article-journal",
+    state[documentType],
+    CitationJSDocumentType[documentType],
   )
 
   useEffect(() => {
@@ -109,7 +145,7 @@ const JournalForm: React.FC = () => {
     const callback = (e: CustomEvent<{ payload: Citation }>) =>
       dispatch({
         type: "fill",
-        documentType: CitationDocumentType.JOURNAL,
+        documentType: documentType,
         value: e.detail.payload,
       })
     refNode.current?.addEventListener(Events.CITATION, callback as EventListener)
@@ -119,6 +155,14 @@ const JournalForm: React.FC = () => {
         callback as EventListener,
       )
   }, [refNode])
+
+  const fields = useMemo(
+    () =>
+      documentFields[CitationJSDocumentType[documentType]].filter(
+        (field) => !eliminatedFields[documentType].includes(field),
+      ),
+    [],
+  )
 
   return (
     <Box
@@ -130,53 +174,52 @@ const JournalForm: React.FC = () => {
     >
       <OnFlyCitationBox citation={citation} handleClick={handleClick} />
 
-      <TextFieldInput
-        label="Article Title *"
-        id="articleTitle"
-        required
-        documentType={CitationDocumentType.JOURNAL}
-        error={error.articleTitle}
-      />
-      <TextFieldInput
-        label="Journal Title *"
-        id="journalTitle"
-        required
-        documentType={CitationDocumentType.JOURNAL}
-        error={error.journalTitle}
-      />
-      <NumberFieldInput
-        label="Year *"
-        id="year"
-        required
-        documentType={CitationDocumentType.JOURNAL}
-        error={error.year}
-        inputProps={{ minLength: 4, maxLength: 4, min: 0 }}
-      />
-      <AuthorsInput documentType={CitationDocumentType.JOURNAL} />
-      <NumberFieldInput
-        label="Volume"
-        id="volume"
-        width={200}
-        documentType={CitationDocumentType.JOURNAL}
-        inputProps={{ min: 0 }}
-      />
-      <NumberFieldInput
-        label="Issue"
-        id="issue"
-        width={200}
-        documentType={CitationDocumentType.JOURNAL}
-        inputProps={{ min: 0 }}
-      />
-      <PagesInput documentType={CitationDocumentType.JOURNAL} />
-      <LinkInput documentType={CitationDocumentType.JOURNAL} />
+      <Box display="flex">
+        <Box>
+          {fields.map((field, index) => (
+            <Fragment key={index.toString()}>
+              {((field === "issued" || field === "accessed") && (
+                <>
+                  <ContributorsInput documentType={documentType} />
+                  <DateField
+                    label={labels[field]}
+                    id={field}
+                    documentType={documentType}
+                  />
+                </>
+              )) ||
+                (field === "DOI" &&
+                  documentType === CitationDocumentType.JOURNAL && (
+                    <LinkInput documentType={documentType} />
+                  )) ||
+                (!(
+                  field === "URL" && documentType === CitationDocumentType.JOURNAL
+                ) && (
+                  <TextField
+                    label={labels[field]}
+                    id={field}
+                    required
+                    documentType={documentType}
+                  />
+                ))}
+            </Fragment>
+          ))}
+        </Box>
 
-      {/* TODO:: check citation.js support for annotation */}
-      {/* <TextFieldInput label="Annotation" id="annotation" documentType="journal" multiline /> */}
-
-      <Stack spacing={4} direction="row" justifyContent="end">
-        <ClearFields document={CitationDocumentType.JOURNAL} />
-        <CiteResourceButton onCiteResource={onCiteResource} />
-      </Stack>
+        <Stack
+          spacing={4}
+          sx={{
+            position: "sticky",
+            top: "10%",
+            display: "block",
+            height: "100%",
+            margin: "40px 0 0 20px",
+          }}
+        >
+          <CiteResourceButton onCiteResource={onCiteResource} />
+          <ClearFields document={documentType} />
+        </Stack>
+      </Box>
 
       <Snackbar open={showAlert} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>

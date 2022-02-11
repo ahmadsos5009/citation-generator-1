@@ -1,4 +1,4 @@
-export const labels = {
+export const labels: { [key in string]: string } = {
   title: "Title",
   abstract: "Abstract",
   "container-title": "Publication",
@@ -26,7 +26,7 @@ export const labels = {
   "number-of-pages": "# of Pages",
   ISBN: "ISBN",
 }
-export const descriptions = {
+export const descriptions: { [key in string]: string } = {
   title: "primary title of the item",
   abstract: "abstract of the item (e.g. the abstract of a journal article)",
   "container-title":
@@ -62,7 +62,7 @@ export const descriptions = {
   "number-of-pages": "total number of pages of the cited item",
   ISBN: "International Standard Book Number",
 }
-export const users = {
+export const users: { [key in string]: string } = {
   author: "author",
   editor: "editor",
   "container-author": "bookAuthor",
@@ -75,7 +75,7 @@ export const users = {
   translator: "translator",
   contributor: "contributor",
 }
-export const documentUser = {
+export const documentUser: { [key in string]: string[] } = {
   "article-journal": [
     "author",
     "contributor",
@@ -86,4 +86,77 @@ export const documentUser = {
   report: ["author", "contributor", "collection-editor", "translator"],
   book: ["author", "contributor", "editor", "collection-editor", "translator"],
   webpage: ["author", "contributor", "translator"],
+}
+export const documentFields: { [key in string]: string[] } = {
+  "article-journal": [
+    "title",
+    "abstract",
+    "container-title",
+    "volume",
+    "issue",
+    "page",
+    "issued",
+    "collection-title",
+    "journalAbbreviation",
+    "language",
+    "DOI",
+    "ISSN",
+    "shortTitle",
+    "URL",
+    "accessed",
+    "archive",
+    "archive_location",
+    "source",
+    "call-number",
+    "note",
+  ],
+  report: [
+    "title",
+    "abstract",
+    "collection-title",
+    "publisher-place",
+    "issued",
+    "page",
+    "language",
+    "shortTitle",
+    "URL",
+    "accessed",
+    "archive",
+    "archive_location",
+    "source",
+    "call-number",
+    "note",
+  ],
+  book: [
+    "title",
+    "abstract",
+    "collection-title",
+    "collection-number",
+    "volume",
+    "number-of-volumes",
+    "edition",
+    "publisher-place",
+    "issued",
+    "number-of-pages",
+    "language",
+    "ISBN",
+    "shortTitle",
+    "URL",
+    "accessed",
+    "archive",
+    "archive_location",
+    "source",
+    "call-number",
+    "note",
+  ],
+  webpage: [
+    "title",
+    "abstract",
+    "issued",
+    "shortTitle",
+    "URL",
+    "accessed",
+    "language",
+    "note",
+  ],
 }

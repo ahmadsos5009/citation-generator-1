@@ -1,5 +1,6 @@
 import React, { useCallback, useContext } from "react"
 import {
+  Badge,
   Box,
   Button,
   Fab,
@@ -13,7 +14,7 @@ import {
 import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import MenuOpenIcon from "@mui/icons-material/MenuOpen"
 import { DBContext } from "../provider/DBProvider"
-import { clearJournalFields } from "./utilities/html_fields"
+import { clearCitationFields } from "./utilities/html_fields"
 import { CitationDocumentType } from "../types"
 import { StoreContext } from "../provider/Store"
 import FilterListIcon from "@mui/icons-material/FilterList"
@@ -40,17 +41,9 @@ export const ClearFields: React.FC<{ document: CitationDocumentType }> = ({
   const { dispatch } = useContext(StoreContext)
 
   const onClearClick = useCallback(() => {
-    switch (document) {
-      case "journal": {
-        clearJournalFields()
-        break
-      }
-      default: {
-        break
-      }
-    }
-    dispatch({ type: "clear" })
-  }, [])
+    dispatch({ type: "clear", documentType: document })
+    clearCitationFields(document)
+  }, [dispatch, document])
 
   return (
     <Tooltip title="clear all fields">
@@ -130,7 +123,9 @@ export const ReferenceFilterButton: React.FC = () => {
     <>
       <Tooltip title="Filter By Document Type">
         <IconButton onClick={handleClick}>
-          <FilterListIcon />
+          <Badge badgeContent={filters.length} color="primary">
+            <FilterListIcon />
+          </Badge>
         </IconButton>
       </Tooltip>
 
