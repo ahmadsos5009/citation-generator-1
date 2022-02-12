@@ -2,8 +2,10 @@ import {
   BookCitation,
   JournalArticleCitation,
   ReportCitation,
+  User,
   WebsiteCitation,
 } from "./cslTypes/type"
+import { Users } from "./components/Inputs/Contributors"
 
 export enum CitationDocumentType {
   JOURNAL = "journal",
@@ -28,6 +30,11 @@ export type CitationStyle = "apa" | "ieee"
 export enum Events {
   CITATION = "fill-citation-field",
   AUTHORS = "fill-authors-field",
+}
+
+export type AuthorsEventPayload = {
+  state: Users[]
+  store: { [key in string]: User[] }
 }
 
 export type Citation =
