@@ -1,22 +1,33 @@
 import {
+  AuthorsEventPayload,
   Citation,
   CitationDocumentType,
   CitationJSDocumentType,
   Events,
 } from "../../types"
-import { documentFields } from "../../cslTypes/fieldsMapping"
+import { documentFields, documentUser } from "../../cslTypes/fieldsMapping"
 import { eliminatedFields } from "../CitationForm"
 import { v4 as uuid } from "uuid"
 import { User } from "../../cslTypes/type"
+import { Users } from "../Inputs/Contributors"
 
 export const clearCitationFields = (documentType: CitationDocumentType): void => {
   documentFields[CitationJSDocumentType[documentType]]
     .filter((field) => !eliminatedFields[documentType].includes(field))
     .map((field) => clearNode(document.getElementById(field)))
 
-  const editEvent = new CustomEvent<{ payload: User }>(Events.AUTHORS, {
-    detail: { payload: { id: uuid() } },
-  })
+  const initialUser = { id: uuid() }
+  const editEvent = new CustomEvent<{ payload: AuthorsEventPayload }>(
+    Events.AUTHORS,
+    {
+      detail: {
+        payload: {
+          state: [{ ...initialUser, role: "author" }],
+          store: { author: [initialUser] },
+        },
+      },
+    },
+  )
   document.getElementById("author-container")?.dispatchEvent(editEvent)
 
   clearNode(document.getElementById("issued-day"))
@@ -48,6 +59,25 @@ export const fillCitationFields = (
     },
   )
   document.getElementById("form-container")?.dispatchEvent(fromContainerEvent)
+
+  let state: Users[] = []
+  const store: { [key in string]: User[] } = {}
+  documentUser[CitationJSDocumentType[documentType]].map((user) => {
+    // @ts-ignore
+    if (citation[user]) {
+      // @ts-ignore
+      state = [...state, ...citation[user].map((u: User) => ({ ...u, role: user }))]
+      // @ts-ignore
+      store[user] = citation[user]
+    }
+  })
+
+  const editEvent = new CustomEvent<{
+    payload: AuthorsEventPayload
+  }>(Events.AUTHORS, {
+    detail: { payload: { state, store } },
+  })
+  document.getElementById("author-container")?.dispatchEvent(editEvent)
 }
 
 const updateNodeValue = (node: HTMLElement | null, value?: string): void => {

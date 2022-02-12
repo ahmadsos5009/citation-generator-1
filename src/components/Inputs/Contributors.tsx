@@ -7,7 +7,12 @@ import React, {
   useRef,
   useState,
 } from "react"
-import { CitationDocumentType, CitationJSDocumentType, Events } from "../../types"
+import {
+  AuthorsEventPayload,
+  CitationDocumentType,
+  CitationJSDocumentType,
+  Events,
+} from "../../types"
 import { StoreContext } from "../../provider/Store"
 import { documentUser, users } from "../../cslTypes/fieldsMapping"
 import { v4 as uuid } from "uuid"
@@ -202,19 +207,20 @@ const ContributorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
   const nodeRef = useRef<HTMLDivElement>()
 
   const EventCallBack = useCallback(
-    (e: CustomEvent<{ payload: User }>) => {
-      dispatch({
-        type: "set",
-        id: "author",
-        documentType,
-        value: [e.detail.payload],
-      })
-      setContributors([
-        {
-          ...e.detail.payload,
-          role: "author",
-        },
-      ])
+    (e: CustomEvent<{ payload: AuthorsEventPayload }>) => {
+      const { state, store } = e.detail.payload
+      if (store) {
+        Object.entries(store).map((obj) => {
+          const [role, value] = obj
+          dispatch({
+            type: "set",
+            id: role,
+            documentType,
+            value,
+          })
+        })
+        setContributors(state)
+      }
     },
     [dispatch, setContributors],
   )
@@ -259,6 +265,7 @@ const ContributorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
             name={`${contributor.id}_${contributor.role}`}
             id="given"
             label="Given"
+            value={contributor.given}
             inputProps={{ className: "given" }}
             onChange={handleChange}
           />
@@ -266,6 +273,7 @@ const ContributorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
             name={`${contributor.id}_${contributor.role}`}
             id="family"
             label="Family"
+            value={contributor.family}
             inputProps={{ className: "family" }}
             onChange={handleChange}
           />
@@ -273,6 +281,7 @@ const ContributorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
             name={`${contributor.id}_${contributor.role}`}
             id="suffix"
             label="Suffix"
+            value={contributor.suffix}
             inputProps={{ className: "suffix" }}
             onChange={handleChange}
           />

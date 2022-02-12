@@ -31,13 +31,11 @@ import { ReferenceExportButton, ReferenceFilterButton } from "./Buttons"
 import { ReferencesListContext } from "../provider/ReferencesListProvider"
 import { grey } from "@mui/material/colors"
 import { navigate } from "gatsby"
-import { StoreContext } from "../provider/Store"
 
 export const ReferencesList: React.FC<{
   setDocumentType: React.Dispatch<React.SetStateAction<CitationDocumentType>>
 }> = ({ setDocumentType }) => {
   const { state, showCitationsList, dispatch, format } = useContext(DBContext)
-  const Store = useContext(StoreContext)
 
   const { filters, selectedCitations, setSelectedCitations } =
     useContext(ReferencesListContext)
@@ -75,7 +73,6 @@ export const ReferencesList: React.FC<{
     (event: React.MouseEvent<HTMLElement>) => {
       if (event.currentTarget) {
         const citationID = (event.currentTarget as HTMLButtonElement).value
-        Store.dispatch({ type: "clear", documentType: CitationDocumentType.JOURNAL })
         dispatch({
           type: "edit",
           citationID,
