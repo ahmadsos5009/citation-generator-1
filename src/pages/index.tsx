@@ -8,78 +8,101 @@ import {
   CardMedia,
   Container,
   Grid,
-  Stack,
   Typography,
 } from "@mui/material"
+
 import Seo from "../components/Seo"
 import Layout from "../components/pages/Layout"
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+import { StaticImage } from "gatsby-plugin-image"
+import { CSL_METADATA } from "../csl_metadata"
 
 const IndexPage: React.FC = () => (
   <Layout>
     {/* TODO:: add more info */}
     <Seo title="Home" />
-    <Box
+    <Container
       sx={{
-        bgcolor: "background.paper",
-        pt: 8,
-        pb: 6,
+        py: 8,
+        border: "1px solid #d4d7dc",
+        borderRadius: 1,
+        background: "white",
       }}
+      maxWidth="lg"
     >
-      <Container maxWidth="sm">
-        <Typography
-          component="h1"
-          variant="h2"
-          align="center"
-          color="text.primary"
-          gutterBottom
-        >
-          Citation Generator
-        </Typography>
-        <Typography variant="h5" align="center" color="text.secondary" paragraph>
-          Create citation online rapidly free, with support for a large number of
-          citation styles.
-        </Typography>
-        <Stack sx={{ pt: 4 }} direction="row" spacing={2} justifyContent="center">
-          <Button variant="contained">Main call to action</Button>
-          <Button variant="outlined">Secondary action</Button>
-        </Stack>
-      </Container>
-    </Box>
-    <Container sx={{ py: 8 }} maxWidth="md">
-      {/* End hero unit */}
-      <Grid container spacing={4}>
-        {cards.map((card) => (
-          <Grid item key={card} xs={12} sm={6} md={4}>
-            <Card
-              sx={{
-                height: "100%",
-                display: "flex",
-                flexDirection: "column",
-              }}
+      <Box
+        sx={{
+          bgcolor: "background.paper",
+          pt: 8,
+          pb: 6,
+          display: "flex",
+        }}
+      >
+        <Container maxWidth="sm">
+          <Typography
+            component="h1"
+            variant="h4"
+            align="center"
+            color="text.primary"
+            gutterBottom
+          >
+            Create citation online rapidly free for a wide range of CSL styles
+          </Typography>
+
+          <ul>
+            <li>Generate citation for journal, book, website, report</li>
+            <li>Store citation in your browser</li>
+            <li>Create Bibliographies list</li>
+            <li>Text editor for Bibliographies list</li>
+            <li>Read citation from URL, DOI, ISBN</li>
+            <li>Import citations from BibTeX, LaTeX</li>
+          </ul>
+
+          <Typography
+            variant="subtitle1"
+            align="center"
+            color="text.secondary"
+            paragraph
+          >
+            Check out the list of supported
+            <Button
+              href="/cslList"
+              variant="contained"
+              sx={{ maxWidth: "max-content", margin: "0 4px" }}
             >
-              <CardMedia
-                component="img"
-                sx={{
-                  // 16:9
-                  pt: "56.25%",
-                }}
-                image="https://source.unsplash.com/random"
-                alt="random"
-              />
-              <CardContent sx={{ flexGrow: 1 }}>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Heading
+              Citation Styles
+            </Button>
+            apa, ieee...
+          </Typography>
+        </Container>
+        <Container maxWidth="sm">
+          <StaticImage src="../images/screenshot.png" alt="Citation" />
+        </Container>
+      </Box>
+
+      <Typography component="div" variant="h5" margin="12px">
+        Popular Styles
+      </Typography>
+      <Grid container spacing={4}>
+        {Object.values(CSL_METADATA).map((csl, index) => (
+          <Grid item key={index.toString()} xs={12} sm={6} md={4}>
+            <Card sx={{ maxWidth: 345 }}>
+              <CardMedia component="img" alt={csl.style_title} image={csl.image} />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">
+                  {csl.id}
                 </Typography>
-                <Typography>
-                  This is a media card. You can use this section to describe the
-                  content.
+                <Typography variant="body2" color="text.secondary">
+                  {csl.style_title}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  field: {csl.field}
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small">View</Button>
-                <Button size="small">Edit</Button>
+                <Button size="small" href={`/${csl.id.toLocaleLowerCase()}`}>
+                  Create {csl.id} citation
+                </Button>
+                <Button size="small">Learn More</Button>
               </CardActions>
             </Card>
           </Grid>
