@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkcitation_generator=self.webpackChunkcitation_generator||[]).push([[333],{5749:function(e,t,n){n.r(t);var r=n(7294),l=n(9211),a=n(5616),c=n(3085),u=n(9098);t.default=function(){return r.createElement(u.Z,null,r.createElement(c.Z,{title:"Help"}),r.createElement(l.Z,{sx:{bgcolor:"background.paper",pt:8,pb:6}},r.createElement(a.Z,null,"Help")))}}}]);
+//# sourceMappingURL=component---src-pages-help-tsx-ff06b085461cbfcbf40f.js.map

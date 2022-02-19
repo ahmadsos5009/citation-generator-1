@@ -1,0 +1,2 @@
+"use strict";(self.webpackChunkcitation_generator=self.webpackChunkcitation_generator||[]).push([[65],{2061:function(e,t,n){n.r(t);var r=n(7294),a=n(9211),l=n(5616),c=n(3085),i=n(9098);t.default=function(){return r.createElement(i.Z,null,r.createElement(c.Z,{title:"Citation Style List"}),r.createElement(a.Z,{sx:{bgcolor:"background.paper",pt:8,pb:6}},r.createElement(l.Z,null,"CSL List")))}}}]);
+//# sourceMappingURL=component---src-pages-csl-list-tsx-95f23a9ebf862cfc5254.js.map
