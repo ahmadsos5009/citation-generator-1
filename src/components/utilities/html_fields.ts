@@ -48,8 +48,52 @@ export const fillCitationFields = (
   citation: Citation,
 ): void => {
   documentFields[CitationJSDocumentType[documentType]].map((field) => {
-    // @ts-ignore
-    updateNodeValue(document.getElementById(field), citation[field])
+    switch (field) {
+      case "DOI":
+      case "URL": {
+        const linkInput = document.getElementById("link") as HTMLInputElement
+        if (linkInput && linkInput.value) return
+        // @ts-ignore
+        updateNodeValue(linkInput, citation[field])
+        break
+      }
+      case "issued": {
+        if (documentType != CitationDocumentType.WEBSITE) {
+          // @ts-ignore
+          updateNodeValue(
+            document.getElementById("issued-year"),
+            citation[field]?.["date-parts"][0][0],
+          )
+        } else {
+          updateNodeValue(
+            document.getElementById("issued-year"),
+            citation[field]?.["date-parts"][0][0],
+          )
+          updateNodeValue(
+            document.getElementById("issued-month"),
+            citation[field]?.["date-parts"][0][1],
+          )
+          updateNodeValue(
+            document.getElementById("issued-day"),
+            citation[field]?.["date-parts"][0][2],
+          )
+        }
+        break
+      }
+      default: {
+        // @ts-ignore
+        updateNodeValue(document.getElementById(field), citation[field])
+      }
+    }
+    if (field === "DOI" || field === "URL") {
+      const linkInput = document.getElementById("link") as HTMLInputElement
+      if (linkInput && linkInput.value) return
+      // @ts-ignore
+      updateNodeValue(document.getElementById("link"), citation[field])
+    } else {
+      // @ts-ignore
+      updateNodeValue(document.getElementById(field), citation[field])
+    }
   })
 
   const fromContainerEvent = new CustomEvent<{ payload: Citation }>(
