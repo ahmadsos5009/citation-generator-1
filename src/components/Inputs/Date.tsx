@@ -46,19 +46,19 @@ const DateField: React.FC<
       {documentType === "website" && (
         <>
           <FormControl variant="standard" sx={{ margin: "0 12px" }}>
-            <InputLabel htmlFor="formatted-text-mask-input">Day</InputLabel>
+            <InputLabel shrink>Day</InputLabel>
             <Input onChange={handleChange} type="number" id={`${id}-day`} />
           </FormControl>
 
           <FormControl variant="standard" sx={{ margin: "0 12px" }}>
-            <InputLabel htmlFor="formatted-text-mask-input">Month</InputLabel>
+            <InputLabel shrink>Month</InputLabel>
             <Input onChange={handleChange} type="number" id={`${id}-month`} />
           </FormControl>
         </>
       )}
 
       <FormControl variant="standard" sx={{ margin: "0 12px" }}>
-        <InputLabel htmlFor="formatted-text-mask-input">Year</InputLabel>
+        <InputLabel shrink>Year</InputLabel>
         <Input onChange={handleChange} type="number" id={`${id}-year`} />
       </FormControl>
     </Box>

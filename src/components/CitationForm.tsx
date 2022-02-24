@@ -20,7 +20,7 @@ import {
 import { generateCitation } from "./utilities/citation_generator"
 import { isEmptyObject } from "./utilities/object"
 import { useClipboard } from "./hooks"
-import { OnFlyCitationBox } from "./Citation"
+import { ImportCitationBox, OnFlyCitationBox } from "./Citation"
 import { DBContext } from "../provider/DBProvider"
 import { clearCitationFields, fillCitationFields } from "./utilities/html_fields"
 import { documentFields, labels } from "../cslTypes/fieldsMapping"
@@ -173,6 +173,8 @@ const DocumentForm: React.FC<{ documentType: CitationDocumentType }> = ({
         "& .MuiTextField-root": { m: 1 },
       }}
     >
+      <ImportCitationBox documentType={documentType} />
+
       <OnFlyCitationBox citation={citation} handleClick={handleClick} />
 
       <Box display="flex">
