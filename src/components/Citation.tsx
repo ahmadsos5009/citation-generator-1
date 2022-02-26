@@ -19,6 +19,7 @@ import {
   Snackbar,
   SxProps,
   Theme,
+  Tooltip,
   Typography,
 } from "@mui/material"
 import ContentCopyIcon from "@mui/icons-material/ContentCopy"
@@ -33,7 +34,7 @@ import BookIcon from "@mui/icons-material/Book"
 import WebsiteIcon from "@mui/icons-material/Web"
 import ReportIcon from "@mui/icons-material/Summarize"
 
-const DocumentIcon: {
+export const DocumentIcon: {
   [key in DocumentType]: ReactElement
 } = {
   "article-journal": <ArticleIcon />,
@@ -42,7 +43,7 @@ const DocumentIcon: {
   report: <ReportIcon />,
 }
 
-const DocumentLabel: {
+export const DocumentLabel: {
   [key in DocumentType]: string
 } = {
   "article-journal": "Journal",
@@ -122,8 +123,9 @@ import { clearCitationFields, fillCitationFields } from "./utilities/html_fields
 
 import EditIcon from "@mui/icons-material/Edit"
 import { Spinner } from "./editor/Spinner"
+import { UploadFileModel } from "./Model"
 
-type ImportCitation = Citation & { type: DocumentType }
+export type ImportCitation = Citation & { type: DocumentType }
 
 export const ImportCitationBox: React.FC<{ documentType: CitationDocumentType }> = ({
   documentType,
@@ -221,9 +223,13 @@ export const ImportCitationBox: React.FC<{ documentType: CitationDocumentType }>
           <SearchIcon />
         </IconButton>
         <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
-        <IconButton sx={{ p: "10px" }} aria-label="clear" onClick={onClearClick}>
-          <BackspaceIcon />
-        </IconButton>
+        <Tooltip title="clear imported citation">
+          <IconButton sx={{ p: "10px" }} aria-label="clear" onClick={onClearClick}>
+            <BackspaceIcon />
+          </IconButton>
+        </Tooltip>
+        <Divider sx={{ height: 28, margin: "0 12px 0 0" }} orientation="vertical" />
+        <UploadFileModel documentType={documentType} />
       </Paper>
 
       {previewOutput && (

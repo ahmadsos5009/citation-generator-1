@@ -171,14 +171,21 @@ const DocumentForm: React.FC<{ documentType: CitationDocumentType }> = ({
       id="form-container"
       sx={{
         "& .MuiTextField-root": { m: 1 },
+        height: "100%",
       }}
     >
       <ImportCitationBox documentType={documentType} />
 
       <OnFlyCitationBox citation={citation} handleClick={handleClick} />
 
-      <Box display="flex">
-        <Box>
+      <Box
+        display="flex"
+        sx={{
+          height: "min-content",
+          width: "100%",
+        }}
+      >
+        <Box width="100%">
           {fields.map((field, index) => (
             <Fragment key={index.toString()}>
               {/* TODO:: move logic up */}

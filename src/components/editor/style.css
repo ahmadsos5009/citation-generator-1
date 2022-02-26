@@ -54,3 +54,7 @@
     /* Center the "page". */
     margin: 0 auto;
 }
+
+.document-editor{
+    max-height: 700px;
+}

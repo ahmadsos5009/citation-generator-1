@@ -116,94 +116,97 @@ export const ReferencesList: React.FC<{
         borderRadius: "10px",
       }}
     >
-      <List dense subheader={<ListHeader />}>
-        {citations.map((citation, index) => {
-          const labelId = `checkbox-list-secondary-label-${index}`
+      <Box>
+        <ListHeader />
+        <List dense sx={{ overflowY: "scroll", height: "calc(100vh - 30vh)" }}>
+          {citations.map((citation, index) => {
+            const labelId = `checkbox-list-secondary-label-${index}`
 
-          return (
-            <RefListItem
-              id={labelId}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-              key={index.toString()}
-              secondaryAction={
-                <Stack direction="row">
-                  <Checkbox
-                    edge="end"
-                    inputProps={{ "aria-labelledby": labelId }}
-                    value={citation.citationID}
-                    onChange={onCheckBoxClick}
-                    checked={selectedCitations.includes(citation.citationID)}
-                  />
+            return (
+              <RefListItem
+                id={labelId}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "flex-start",
+                }}
+                key={index.toString()}
+                secondaryAction={
+                  <Stack direction="row">
+                    <Checkbox
+                      edge="end"
+                      inputProps={{ "aria-labelledby": labelId }}
+                      value={citation.citationID}
+                      onChange={onCheckBoxClick}
+                      checked={selectedCitations.includes(citation.citationID)}
+                    />
+                  </Stack>
+                }
+                disablePadding
+              >
+                <Stack direction="row" alignItems="center">
+                  <Stack className="edit-button-group" direction="column">
+                    <IconButton
+                      onClick={handleOnEditClick}
+                      value={citation.citationID}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      onClick={handleOnDeleteClick}
+                      value={citation.citationID}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </Stack>
+
+                  <Stack width="80%">
+                    <Box
+                      dangerouslySetInnerHTML={{
+                        __html: citation?.view.convertedCitation || "",
+                      }}
+                    />
+
+                    <Box
+                      className="in-text-view"
+                      style={{ padding: "2px" }}
+                      display="flex"
+                      flexDirection="column"
+                    >
+                      <Stack direction="row" alignItems="center">
+                        <Typography
+                          variant="caption"
+                          display="block"
+                          gutterBottom
+                          margin={0}
+                        >
+                          In-text Citation
+                        </Typography>
+                        <IconButton
+                          sx={{ padding: 0 }}
+                          onClick={onToggleInTextCitationClick}
+                        >
+                          {(toggleInTextCitation && <ArrowDropUpIcon />) || (
+                            <ArrowDropDownIcon />
+                          )}
+                        </IconButton>
+                      </Stack>
+
+                      {toggleInTextCitation && (
+                        <Box
+                          dangerouslySetInnerHTML={{
+                            __html: citation?.view.inText || "",
+                          }}
+                        />
+                      )}
+                    </Box>
+                  </Stack>
                 </Stack>
-              }
-              disablePadding
-            >
-              <Stack direction="row" alignItems="center">
-                <Stack className="edit-button-group" direction="column">
-                  <IconButton
-                    onClick={handleOnEditClick}
-                    value={citation.citationID}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    onClick={handleOnDeleteClick}
-                    value={citation.citationID}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </Stack>
-
-                <Stack width="80%">
-                  <Box
-                    dangerouslySetInnerHTML={{
-                      __html: citation?.view.convertedCitation || "",
-                    }}
-                  />
-
-                  <Box
-                    className="in-text-view"
-                    style={{ padding: "2px" }}
-                    display="flex"
-                    flexDirection="column"
-                  >
-                    <Stack direction="row" alignItems="center">
-                      <Typography
-                        variant="caption"
-                        display="block"
-                        gutterBottom
-                        margin={0}
-                      >
-                        In-text Citation
-                      </Typography>
-                      <IconButton
-                        sx={{ padding: 0 }}
-                        onClick={onToggleInTextCitationClick}
-                      >
-                        {(toggleInTextCitation && <ArrowDropUpIcon />) || (
-                          <ArrowDropDownIcon />
-                        )}
-                      </IconButton>
-                    </Stack>
-
-                    {toggleInTextCitation && (
-                      <Box
-                        dangerouslySetInnerHTML={{
-                          __html: citation?.view.inText || "",
-                        }}
-                      />
-                    )}
-                  </Box>
-                </Stack>
-              </Stack>
-            </RefListItem>
-          )
-        })}
-      </List>
+              </RefListItem>
+            )
+          })}
+        </List>
+      </Box>
     </Container>
   )
 }

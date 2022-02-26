@@ -14,12 +14,15 @@ const Panel: React.FC<TabPanelProps> = ({ children, value, index }) => (
     hidden={value !== index}
     id={`simple-tabpanel-${index}`}
     aria-labelledby={`simple-tab-${index}`}
+    style={{ height: "100%" }}
   >
     {value === index && (
       <Box
         component="form"
         sx={{
           "& .MuiTextField-root": { m: 1, width: "25ch" },
+          flexGrow: 1,
+          height: "100%",
         }}
         noValidate
         autoComplete="off"
