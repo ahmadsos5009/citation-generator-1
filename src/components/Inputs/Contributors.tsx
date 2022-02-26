@@ -241,8 +241,13 @@ const ContributorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
         </IconButton>
       </Stack>
 
-      {contributors.map((contributor) => (
-        <Stack id={contributor.id} key={contributor.id} spacing={2} direction="row">
+      {contributors.map((contributor, index) => (
+        <Stack
+          id={contributor.id}
+          key={index.toString()}
+          spacing={2}
+          direction="row"
+        >
           <FormControl sx={{ m: 1, minWidth: 150 }}>
             <Select
               name={`${contributor.id}_${contributor.role}`}
@@ -265,7 +270,7 @@ const ContributorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
             name={`${contributor.id}_${contributor.role}`}
             id="given"
             label="Given"
-            value={contributor.given}
+            value={contributor.given || ""}
             inputProps={{ className: "given" }}
             onChange={handleChange}
           />
@@ -273,7 +278,7 @@ const ContributorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
             name={`${contributor.id}_${contributor.role}`}
             id="family"
             label="Family"
-            value={contributor.family}
+            value={contributor.family || ""}
             inputProps={{ className: "family" }}
             onChange={handleChange}
           />
@@ -281,7 +286,7 @@ const ContributorsInput: React.FC<{ documentType: CitationDocumentType }> = ({
             name={`${contributor.id}_${contributor.role}`}
             id="suffix"
             label="Suffix"
-            value={contributor.suffix}
+            value={contributor.suffix || ""}
             inputProps={{ className: "suffix" }}
             onChange={handleChange}
           />

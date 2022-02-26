@@ -3,6 +3,7 @@ import styled from "styled-components"
 import Header from "../Header"
 import Footer from "../Footer"
 import { createTheme, ThemeProvider } from "@mui/material/styles"
+import "../../styles/global.css"
 
 import "typeface-catamaran"
 
@@ -13,10 +14,12 @@ const theme = createTheme({
 })
 
 const Layout: React.FC = ({ children }) => (
-  <Wrapper>
+  <Wrapper className="site">
     <ThemeProvider theme={theme}>
       <Header />
-      <main style={{ background: "#f7f7f7" }}>{children}</main>
+      <main style={{ background: "#f7f7f7" }} className="site-content">
+        {children}
+      </main>
       <Footer />
     </ThemeProvider>
   </Wrapper>

@@ -54,7 +54,7 @@ const IndexPage: React.FC = () => (
             <li>Create Bibliographies list</li>
             <li>Text editor for Bibliographies list</li>
             <li>Read citation from URL, DOI, ISBN</li>
-            <li>Import citations from BibTeX, LaTeX</li>
+            <li>Import citations from BibTeX</li>
           </ul>
 
           <Typography

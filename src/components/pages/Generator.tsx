@@ -48,7 +48,12 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
           }}
         >
           <Container
-            sx={{ border: "1px solid rgba(0, 0, 0, 0.12);", borderRadius: "10px" }}
+            sx={{
+              border: "1px solid rgba(0, 0, 0, 0.12);",
+              borderRadius: "10px",
+              display: "flex",
+              flexDirection: "column",
+            }}
           >
             <CardContent sx={{ flexGrow: 1 }}>
               <Typography
@@ -75,19 +80,21 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
             </CardContent>
 
             <StoreProvider>
-              {(
-                Object.keys(CitationDocumentType) as Array<
-                  keyof typeof CitationDocumentType
-                >
-              ).map((document) => (
-                <TabPanel
-                  key={document}
-                  value={CitationDocumentType[document]}
-                  index={documentType}
-                >
-                  <CitationForm type={CitationDocumentType[document]} />
-                </TabPanel>
-              ))}
+              <Container className="Test" sx={{ flexGrow: 1 }}>
+                {(
+                  Object.keys(CitationDocumentType) as Array<
+                    keyof typeof CitationDocumentType
+                  >
+                ).map((document) => (
+                  <TabPanel
+                    key={document}
+                    value={CitationDocumentType[document]}
+                    index={documentType}
+                  >
+                    <CitationForm type={CitationDocumentType[document]} />
+                  </TabPanel>
+                ))}
+              </Container>
             </StoreProvider>
           </Container>
 
