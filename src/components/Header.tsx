@@ -10,7 +10,7 @@ const Header: React.FC = () => (
       </Link>
       {/*  TODO:: add other options, eg: search for a style   */}
       <Stack direction="row" spacing={2}>
-        <PageLink underline="none" color="white">
+        <PageLink href="/citationPreview" underline="none" color="white">
           Bibliography
         </PageLink>
         <PageLink href="/cslList" underline="none" color="white">

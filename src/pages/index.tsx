@@ -50,11 +50,13 @@ const IndexPage: React.FC = () => (
 
           <ul>
             <li>Generate citation for journal, book, website, report</li>
+            <li>Create your own collections for citations with labels</li>
             <li>Store citation in your browser</li>
             <li>Create Bibliographies list</li>
             <li>Text editor for Bibliographies list</li>
             <li>Read citation from URL, DOI, ISBN</li>
             <li>Import citations from BibTeX</li>
+            <li>Export your citations to a PDF, Word, BibTax Document</li>
           </ul>
 
           <Typography

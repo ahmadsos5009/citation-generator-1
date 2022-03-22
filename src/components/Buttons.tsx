@@ -1,6 +1,7 @@
-import React, { useCallback, useContext } from "react"
+import React, { useCallback, useContext, useMemo } from "react"
 import {
   Badge,
+  BadgeProps,
   Box,
   Button,
   Fab,
@@ -8,6 +9,7 @@ import {
   IconButton,
   Menu,
   MenuItem,
+  styled,
   Tooltip,
   Typography,
 } from "@mui/material"
@@ -15,7 +17,14 @@ import CloseFullscreenIcon from "@mui/icons-material/CloseFullscreen"
 import MenuOpenIcon from "@mui/icons-material/MenuOpen"
 import { DBContext } from "../provider/DBProvider"
 import { clearCitationFields } from "./utilities/html_fields"
-import { CitationDocumentType } from "../types"
+import {
+  Citation,
+  CitationDocumentType,
+  CitationJSDocumentType,
+  CitationWithID,
+  CollectionLabel,
+  DocumentType,
+} from "../types"
 import { StoreContext } from "../provider/Store"
 import FilterListIcon from "@mui/icons-material/FilterList"
 import { useDropDownMenu } from "./hooks"
@@ -24,6 +33,7 @@ import CheckIcon from "@mui/icons-material/Check"
 import ArticleIcon from "@mui/icons-material/Article"
 import { blue, red } from "@mui/material/colors"
 import { ExportFileNameModel } from "./Model"
+import { generateCitations } from "./utilities/citation_generator"
 
 export const CiteResourceButton: React.FC<{
   onCiteResource: () => void
@@ -164,6 +174,32 @@ export const ReferenceExportButton: React.FC = () => {
   const { anchorEl, handleClick, handleClose } = useDropDownMenu()
   const open = Boolean(anchorEl)
 
+  const { state, format } = useContext(DBContext)
+  const { selectedCitations, filters } = useContext(ReferencesListContext)
+
+  const { citationHtml, citationsJson } = useMemo(() => {
+    let citationHtml = ""
+
+    filters.map((doc) => {
+      const citation = Object.values(state.value[doc])
+        .filter((c) => selectedCitations.includes((c as CitationWithID).id) && c)
+        .map((c) => ({ ...c }))
+      citationHtml = citationHtml.concat(generateCitations(citation, format) + "\n")
+    })
+
+    const citationsJson: Citation & { type: DocumentType }[] = []
+    filters.map((doc) =>
+      Object.values(state.value[doc])
+        .filter((c) => selectedCitations.includes((c as CitationWithID).id) && c)
+        .map((c) => citationsJson.push({ ...c, type: CitationJSDocumentType[doc] })),
+    )
+
+    return {
+      citationHtml,
+      citationsJson,
+    }
+  }, [filters, state.value, selectedCitations])
+
   return (
     <>
       <Button
@@ -193,20 +229,52 @@ export const ReferenceExportButton: React.FC = () => {
         <ExportFileNameModel
           buttonText="PDF"
           closeDropDown={handleClose}
+          citationHtml={citationHtml}
+          citationsJson={citationsJson}
           buttonIcon={<ArticleIcon sx={{ color: red[500] }} />}
         />
         <ExportFileNameModel
           buttonText="Word"
           closeDropDown={handleClose}
+          citationHtml={citationHtml}
+          citationsJson={citationsJson}
           buttonIcon={<ArticleIcon sx={{ color: blue[500] }} />}
         />
-        {/*  TODO:: find way to convert input to BibTax */}
         <ExportFileNameModel
           buttonText="BibTax"
           closeDropDown={handleClose}
+          citationHtml={citationHtml}
+          citationsJson={citationsJson}
           buttonIcon={<ArticleIcon color="secondary" />}
         />
       </Menu>
     </>
   )
 }
+
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    right: -3,
+    top: 25,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: "0 4px",
+  },
+}))
+
+import CloseIcon from "@mui/icons-material/Close"
+
+export const LabelBadge: React.FC<{
+  label: CollectionLabel
+  onRemoveSelectedLabelClick: (e: React.MouseEvent) => void
+}> = ({ label, onRemoveSelectedLabelClick }) => (
+  <IconButton aria-label="cart" size="small">
+    <StyledBadge badgeContent={label.label} color={label.labelHex}>
+      <CloseIcon
+        fontSize="small"
+        sx={{ padding: 0 }}
+        id={label.id}
+        onClick={onRemoveSelectedLabelClick}
+      />
+    </StyledBadge>
+  </IconButton>
+)

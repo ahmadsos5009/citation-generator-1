@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useMemo, useRef, useState } from "react"
+import React, { useCallback, useContext, useRef, useState } from "react"
 import {
   Alert,
   Box,
@@ -12,7 +12,7 @@ import {
   MenuItem,
   Modal,
   Snackbar,
-  styled,
+  styled as MUIStyled,
   Tooltip,
   Typography,
 } from "@mui/material"
@@ -24,13 +24,7 @@ import {
 import { ReferencesListContext } from "../provider/ReferencesListProvider"
 import { DBContext } from "../provider/DBProvider"
 import { generateCitation, generateCitations } from "./utilities/citation_generator"
-import {
-  Citation,
-  CitationDocumentType,
-  CitationJSDocumentType,
-  CitationWithID,
-  DocumentType,
-} from "../types"
+import { Citation, CitationDocumentType, DocumentType } from "../types"
 import UploadFileIcon from "@mui/icons-material/UploadFile"
 import { Cite } from "@citation-js/core"
 
@@ -48,14 +42,16 @@ const style = {
 
 export const ExportFileNameModel: React.FC<{
   buttonText: string
+  citationHtml: string
+  citationsJson: Citation & { type: DocumentType }[]
   buttonIcon: React.ReactNode
   closeDropDown: () => void
-}> = ({ buttonText, buttonIcon, closeDropDown }) => {
+}> = ({ buttonText, buttonIcon, closeDropDown, citationHtml, citationsJson }) => {
   const [open, setOpen] = useState(false)
   const [fileName, setFileName] = useState("references")
   const [showAlert, setShowAlert] = useState(false)
 
-  const { selectedCitations, filters } = useContext(ReferencesListContext)
+  const { selectedCitations } = useContext(ReferencesListContext)
 
   const handleOpen = useCallback(() => {
     if (selectedCitations.length > 0) {
@@ -74,31 +70,6 @@ export const ExportFileNameModel: React.FC<{
     (e: React.ChangeEvent<HTMLInputElement>) => setFileName(e.currentTarget.value),
     [setFileName],
   )
-
-  const { state, format } = useContext(DBContext)
-
-  const { citationHtml, citationsJson } = useMemo(() => {
-    let citationHtml = ""
-
-    filters.map((doc) => {
-      const citation = Object.values(state.value[doc])
-        .filter((c) => selectedCitations.includes((c as CitationWithID).id) && c)
-        .map((c) => ({ ...c }))
-      citationHtml = citationHtml.concat(generateCitations(citation, format) + "\n")
-    })
-
-    const citationsJson: Citation & { type: DocumentType }[] = []
-    filters.map((doc) =>
-      Object.values(state.value[doc])
-        .filter((c) => selectedCitations.includes((c as CitationWithID).id) && c)
-        .map((c) => citationsJson.push({ ...c, type: CitationJSDocumentType[doc] })),
-    )
-
-    return {
-      citationHtml,
-      citationsJson,
-    }
-  }, [filters, state.value, selectedCitations])
 
   const handleDownloadClick = useCallback(() => {
     switch (buttonText) {
@@ -305,6 +276,8 @@ export const UploadFileModel: React.FC<{ documentType: CitationDocumentType }> =
                     documentType={documentType}
                     onEditClick={onEditClick}
                     index={index}
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={index}
                   />
                 ))}
               </List>
@@ -332,7 +305,6 @@ const CitationListItem: React.FC<{
 
   return (
     <ListItem
-      key={index.toString()}
       secondaryAction={
         <IconButton
           value={index}
@@ -356,6 +328,6 @@ const CitationListItem: React.FC<{
   )
 }
 
-const Input = styled("input")({
+const Input = MUIStyled("input")({
   display: "none",
 })

@@ -61,3 +61,26 @@ export interface CitationOutput {
 export type DBCitations = {
   [k in CitationDocumentType]: { [k: string]: CitationWithID }
 }
+
+export type CitationCollection = {
+  id: string
+  title: string
+  labelsId: string[]
+  format: CitationStyle
+  citationsId: string[]
+}
+
+export type LabelHex =
+  | "secondary"
+  | "default"
+  | "success"
+  | "warning"
+  | "error"
+  | "primary"
+  | "info"
+
+export type CollectionLabel = {
+  id: string
+  label: string
+  labelHex: LabelHex
+}
