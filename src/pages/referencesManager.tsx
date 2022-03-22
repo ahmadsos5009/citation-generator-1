@@ -2,8 +2,18 @@ import * as React from "react"
 import { Box, Container } from "@mui/material"
 import Seo from "../components/Seo"
 import Layout from "../components/pages/Layout"
+import { useEffect, useState } from "react"
 
 const ReferencesManagerPage: React.FC = () => {
+  const [format, setFormat] = useState()
+
+  useEffect(() => {
+    const format = window.history.state?.format
+    if (format) {
+      setFormat(format)
+    }
+  }, [setFormat])
+
   return (
     <Layout>
       {/* TODO:: add more info */}
@@ -15,7 +25,7 @@ const ReferencesManagerPage: React.FC = () => {
           pb: 6,
         }}
       >
-        <Container>CSL List :{window.history.state.format}</Container>
+        {format && <Container>CSL List :{format}</Container>}
       </Box>
     </Layout>
   )
