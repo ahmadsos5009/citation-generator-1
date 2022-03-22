@@ -15,14 +15,12 @@ import {
   ListItem,
   Snackbar,
   Stack,
+  Tooltip,
   Typography,
 } from "@mui/material"
 
 import RemoveRedEyeIcon from "@mui/icons-material/RemoveRedEye"
-import EditIcon from "@mui/icons-material/Edit"
-import DeleteIcon from "@mui/icons-material/Delete"
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp"
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown"
+
 import styled from "styled-components"
 import { generateCitation, generateCitations } from "./utilities/citation_generator"
 import { DBContext } from "../provider/DBProvider"
@@ -44,12 +42,14 @@ export const ReferencesList: React.FC<{
     const citations: {
       view: { convertedCitation: string; inText: string }
       citationID: string
+      type: CitationDocumentType
     }[] = []
     filters.map((doc) =>
       Object.values(state.value[doc]).map((c) => {
         citations.push({
           view: generateCitation(c, CitationJSDocumentType[doc], "html", format),
           citationID: c.id,
+          type: doc,
         })
       }),
     )
@@ -83,12 +83,6 @@ export const ReferencesList: React.FC<{
     [dispatch],
   )
 
-  const [toggleInTextCitation, setToggleInTextCitation] = useState(false)
-  const onToggleInTextCitationClick = useCallback(
-    () => setToggleInTextCitation(!toggleInTextCitation),
-    [toggleInTextCitation, setToggleInTextCitation],
-  )
-
   const onCheckBoxClick = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
       const value = e.currentTarget.value
@@ -108,7 +102,7 @@ export const ReferencesList: React.FC<{
   return (
     <Container
       sx={{
-        width: "25%",
+        width: "32%",
         p: 4,
         m: 0,
         textAlign: "center",
@@ -117,99 +111,115 @@ export const ReferencesList: React.FC<{
       }}
     >
       <Box>
-        <ListHeader />
-        <List dense sx={{ overflowY: "scroll", height: "calc(100vh - 30vh)" }}>
-          {citations.map((citation, index) => {
-            const labelId = `checkbox-list-secondary-label-${index}`
+        <CollectionProvider>
+          <ListHeader />
+          <Stack direction="row" spacing={4}>
+            {/*<Collections />*/}
+            <List dense sx={{ overflowY: "scroll", height: "calc(100vh - 30vh)" }}>
+              {citations.map((citation, index) => {
+                const labelId = `checkbox-list-secondary-label-${index}`
 
-            return (
-              <RefListItem
-                id={labelId}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                }}
-                key={index.toString()}
-                secondaryAction={
-                  <Stack direction="row">
-                    <Checkbox
-                      edge="end"
-                      inputProps={{ "aria-labelledby": labelId }}
-                      value={citation.citationID}
-                      onChange={onCheckBoxClick}
-                      checked={selectedCitations.includes(citation.citationID)}
-                    />
-                  </Stack>
-                }
-                disablePadding
-              >
-                <Stack direction="row" alignItems="center">
-                  <Stack className="edit-button-group" direction="column">
-                    <IconButton
-                      onClick={handleOnEditClick}
-                      value={citation.citationID}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      onClick={handleOnDeleteClick}
-                      value={citation.citationID}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </Stack>
-
-                  <Stack width="80%">
-                    <Box
-                      dangerouslySetInnerHTML={{
-                        __html: citation?.view.convertedCitation || "",
-                      }}
-                    />
-
-                    <Box
-                      className="in-text-view"
-                      style={{ padding: "2px" }}
-                      display="flex"
-                      flexDirection="column"
-                    >
-                      <Stack direction="row" alignItems="center">
-                        <Typography
-                          variant="caption"
-                          display="block"
-                          gutterBottom
-                          margin={0}
-                        >
-                          In-text Citation
-                        </Typography>
-                        <IconButton
-                          sx={{ padding: 0 }}
-                          onClick={onToggleInTextCitationClick}
-                        >
-                          {(toggleInTextCitation && <ArrowDropUpIcon />) || (
-                            <ArrowDropDownIcon />
-                          )}
-                        </IconButton>
+                return (
+                  <RefListItem
+                    id={labelId}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      padding: "12px 4px",
+                    }}
+                    key={index.toString()}
+                    secondaryAction={
+                      <Stack direction="row">
+                        <Checkbox
+                          edge="end"
+                          inputProps={{ "aria-labelledby": labelId }}
+                          value={citation.citationID}
+                          onChange={onCheckBoxClick}
+                          checked={selectedCitations.includes(citation.citationID)}
+                        />
                       </Stack>
-
-                      {toggleInTextCitation && (
+                    }
+                    disablePadding
+                  >
+                    <Stack width="80%">
+                      <Box padding="0 2px">
                         <Box
+                          sx={{ overflowWrap: "break-word" }}
                           dangerouslySetInnerHTML={{
-                            __html: citation?.view.inText || "",
+                            __html: citation?.view.convertedCitation || "",
                           }}
                         />
-                      )}
-                    </Box>
-                  </Stack>
-                </Stack>
-              </RefListItem>
-            )
-          })}
-        </List>
+
+                        <Box
+                          className="in-text-viewa"
+                          style={{ padding: "2px" }}
+                          display="flex"
+                          flexDirection="column"
+                        >
+                          <Stack direction="row" alignItems="center">
+                            <Typography
+                              variant="caption"
+                              display="inline"
+                              fontWeight="600"
+                              gutterBottom
+                              margin={0}
+                            >
+                              In-text Citation
+                              <Box
+                                display="inline"
+                                fontWeight="300"
+                                paddingLeft="4px"
+                                dangerouslySetInnerHTML={{
+                                  __html: citation?.view.inText || "",
+                                }}
+                              />
+                            </Typography>
+                          </Stack>
+                        </Box>
+                      </Box>
+
+                      <Stack className="edit-button-grouap" flexDirection="row">
+                        <IconButton
+                          onClick={handleOnEditClick}
+                          value={citation.citationID}
+                        >
+                          <EditIcon fontSize="small" />
+                        </IconButton>
+                        <IconButton
+                          onClick={handleOnDeleteClick}
+                          value={citation.citationID}
+                        >
+                          <DeleteIcon fontSize="small" />
+                        </IconButton>
+                        <Tooltip
+                          title={
+                            DocumentLabel[CitationJSDocumentType[citation.type]]
+                          }
+                        >
+                          <DocumentBadgeContainer>
+                            {DocumentIcon[CitationJSDocumentType[citation.type]]}
+                          </DocumentBadgeContainer>
+                        </Tooltip>
+                      </Stack>
+                    </Stack>
+                  </RefListItem>
+                )
+              })}
+            </List>
+          </Stack>
+        </CollectionProvider>
       </Box>
     </Container>
   )
 }
+
+import EditIcon from "@mui/icons-material/Edit"
+import DeleteIcon from "@mui/icons-material/Delete"
+import OpenInFullIcon from "@mui/icons-material/OpenInFull"
+import { DocumentIcon, DocumentLabel } from "./Citation"
+import { CollectionProvider } from "../provider/CollectionProvider"
+import { CollectionModel } from "./modal/CollectionModel"
 
 const ListHeader: React.FC = () => {
   const [selectAll, setSelectedAll] = useState(false)
@@ -255,6 +265,12 @@ const ListHeader: React.FC = () => {
     }
   }, [filters, state.value, selectedCitations, setShowAlert])
 
+  const onExpandClick = useCallback(() => {
+    return navigate("/referencesManager", {
+      state: { format },
+    })
+  }, [format])
+
   return (
     <Box>
       <Typography>References</Typography>
@@ -270,9 +286,12 @@ const ListHeader: React.FC = () => {
       >
         <Box>
           <ReferenceFilterButton />
+
           <IconButton onClick={onPreviewClick}>
             <RemoveRedEyeIcon />
           </IconButton>
+
+          <CollectionModel />
 
           <Snackbar
             open={showAlert}
@@ -287,6 +306,11 @@ const ListHeader: React.FC = () => {
         </Box>
         <Box marginRight="18px">
           <ReferenceExportButton />
+          <Tooltip title="Expand Full View">
+            <IconButton>
+              <OpenInFullIcon onClick={onExpandClick} />
+            </IconButton>
+          </Tooltip>
           <Checkbox edge="end" value={selectAll} onChange={onSelectAllClick} />
         </Box>
       </Stack>
@@ -326,5 +350,13 @@ const RefListItem = styled(ListItem)`
 
   .csl-bib-body {
     padding: 4px;
+  }
+`
+
+const DocumentBadgeContainer = styled.div`
+  align-self: center;
+  svg {
+    font-size: large;
+    fill: darkgreen;
   }
 `
