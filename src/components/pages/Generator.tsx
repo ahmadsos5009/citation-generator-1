@@ -42,6 +42,7 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
           sx={{
             display: "flex",
             flexDirection: "row",
+            justifyContent: "space-around",
             flexWrap: "wrap",
             p: 1,
             m: 1,
@@ -53,6 +54,8 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
               borderRadius: "10px",
               display: "flex",
               flexDirection: "column",
+              p: 4,
+              m: 0,
             }}
           >
             <CardContent sx={{ flexGrow: 1 }}>

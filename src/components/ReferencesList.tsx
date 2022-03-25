@@ -9,7 +9,7 @@ import {
   Alert,
   Box,
   Checkbox,
-  Container,
+  Collapse,
   IconButton,
   List,
   ListItem,
@@ -95,14 +95,13 @@ export const ReferencesList: React.FC<{
     [selectedCitations, setSelectedCitations],
   )
 
-  if (!showCitationsList) {
-    return <></>
-  }
-
   return (
-    <Container
+    <Collapse
+      orientation="horizontal"
+      in={showCitationsList}
       sx={{
-        width: "32%",
+        display: "flex",
+        maxWidth: "32%",
         p: 4,
         m: 0,
         textAlign: "center",
@@ -210,7 +209,7 @@ export const ReferencesList: React.FC<{
           </Stack>
         </CollectionProvider>
       </Box>
-    </Container>
+    </Collapse>
   )
 }
 
