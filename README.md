@@ -7,9 +7,23 @@
 #### 🧐 CSL styles supported
 
     ├── apa
+    ├── apa 7
+    ├── ama
+    ├── asa
+    ├── acm
+    ├── acs
     ├── ieee
+    ├── mla
+    ├── chicago
+    ├── harvard
+    ├── nature
+    ├── vancouver
+    ├── oscola
+    ├── nlm
+    ├── ecology
+    ├── rsc
 
 #### Steps To Add a new CSL Style:
 * Add mdx file [MDX](https://github.com/asouqi/citation-generator/blob/master/src/mdx)
 * Add new style to the [CitationStyle](https://github.com/asouqi/citation-generator/blob/master/src/types.ts#L26) type
-* Add [CSL XML](https://csl.mendeley.com/searchByName/) to new [json object](https://github.com/asouqi/citation-generator/blob/master/data/csl_code.json) as one line use [this tool](https://lingojam.com/TexttoOneLine)
+* Add [CSL MetaData](https://github.com/asouqi/citation-generator/blob/master/src/csl_metadata.ts), Object Attributes: `id, style_title, field, image` and `CSL_XML`

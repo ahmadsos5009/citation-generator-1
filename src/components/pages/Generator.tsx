@@ -1,5 +1,5 @@
 import * as React from "react"
-import { useCallback, useEffect, useState } from "react"
+import { useCallback, useState } from "react"
 import { Box, CardContent, Container, Tab, Tabs, Typography } from "@mui/material"
 
 import Layout from "./Layout"
@@ -14,7 +14,7 @@ import { ReferencesList } from "../ReferencesList"
 import { ReferencesListProvider } from "../../provider/ReferencesListProvider"
 
 interface PageProps {
-  pageContext: { id: string; title: string; style: CitationStyle; xml: string }
+  pageContext: { id: string; title: string; style: CitationStyle }
 }
 
 const Generator: React.FC<PageProps> = ({ pageContext }) => {
@@ -22,16 +22,6 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
     CitationDocumentType.JOURNAL,
   )
   const onDocumentTypeClick = useCallback((event, type) => setDocumentType(type), [])
-
-  useEffect(() => {
-    if (pageContext.xml) {
-      require("@citation-js/plugin-csl")
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const { plugins } = require("@citation-js/core")
-      const cslPlugin = plugins.config.get("@csl")
-      cslPlugin.templates.add(pageContext.style, pageContext.xml)
-    }
-  }, [])
 
   return (
     <DBProvider format={pageContext.style} citationDocument={documentType}>
