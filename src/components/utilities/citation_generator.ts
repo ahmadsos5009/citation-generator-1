@@ -10,8 +10,8 @@ export function generateCitation(
   format: "html" | "text",
   template: CitationStyle,
 ): { convertedCitation: string; inText: string } {
-  // const cslPlugin = plugins.config.get("@csl")
-  // cslPlugin.templates.add(template, CSL_XML[template])
+  const cslPlugin = plugins.config.get("@csl")
+  cslPlugin.templates.add(template, CSL_XML[template])
 
   const cite = Cite({ ...citation, type: documentType }, { format: "string" })
   const htmlCitation = cite.format("bibliography", {
