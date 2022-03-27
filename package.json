@@ -33,7 +33,6 @@
     "gatsby-plugin-webfonts": "^2.2.1",
     "gatsby-source-filesystem": "^3.10.0",
     "gatsby-theme-material-ui": "^5.1.0",
-    "gatsby-transformer-json": "^4.7.0",
     "gatsby-transformer-sharp": "^3.10.0",
     "html-to-pdfmake": "^2.3.7",
     "pdfmake": "^0.2.4",
