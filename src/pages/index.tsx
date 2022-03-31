@@ -29,8 +29,10 @@ const IndexPage: React.FC = () => {
 
   return (
     <Layout>
-      {/* TODO:: add more info */}
-      <Seo title="Home" />
+      <Seo
+        title="Citation Creator / Generator"
+        description="Create citation online rapidly free for a wide range of CSL styles"
+      />
       <Container
         sx={{
           py: 8,

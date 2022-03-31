@@ -26,8 +26,10 @@ const Generator: React.FC<PageProps> = ({ pageContext }) => {
   return (
     <DBProvider format={pageContext.style} citationDocument={documentType}>
       <Layout>
-        {/* TODO:: add more info */}
-        <Seo title={`${pageContext.title}`} />
+        <Seo
+          title={`${pageContext.id} citation generator`}
+          description={`${pageContext.id} citation & in text citation generator, and bibliography/reference list generator.`}
+        />
         <Box
           sx={{
             display: "flex",

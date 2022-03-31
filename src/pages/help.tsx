@@ -7,7 +7,6 @@ import { StaticImage } from "gatsby-plugin-image"
 const HelpPage: React.FC = () => {
   return (
     <Layout>
-      {/* TODO:: add more info */}
       <Seo title="Help" />
       <Box
         sx={{

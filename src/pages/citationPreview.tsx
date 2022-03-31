@@ -8,8 +8,7 @@ const CitationEditor = Loadable(() => import("../components/editor/CitationEdito
 const CitationPreviewPage: React.FC = () => {
   return (
     <Layout>
-      {/* TODO:: add more info */}
-      <Seo title="Home" />
+      <Seo title="Citation List(Bibliography) editor" />
       <Box
         sx={{
           bgcolor: "background.paper",

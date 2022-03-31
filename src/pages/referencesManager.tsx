@@ -16,8 +16,11 @@ const ReferencesManagerPage: React.FC = () => {
 
   return (
     <Layout>
-      {/* TODO:: add more info */}
-      <Seo title="Citation Style List" />
+      <Seo
+        title="Reference manager"
+        // TODO:: add more about expected features
+        description="Store and organize your citations with collections/papers and labels, for free"
+      />
       <Box
         sx={{
           bgcolor: "background.paper",
