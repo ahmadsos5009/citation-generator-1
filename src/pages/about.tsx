@@ -6,8 +6,7 @@ import Layout from "../components/pages/Layout"
 const AboutPage: React.FC = () => {
   return (
     <Layout>
-      {/* TODO:: add more info */}
-      <Seo title="Help" />
+      <Seo title="About" />
       <Box
         sx={{
           bgcolor: "background.paper",

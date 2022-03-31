@@ -197,8 +197,9 @@ const CSLMetaDataPage: React.FC = () => {
 
   return (
     <Layout>
-      {/* TODO:: add more info */}
-      <Seo title="Citation Style List" />
+      <Seo
+        title={`${style_title} with Bibliography and in-text citation examples`}
+      />
       <Box
         sx={{
           bgcolor: "background.paper",

@@ -15,8 +15,7 @@ import { CSL_METADATA } from "../csl_metadata"
 const CSLListPage: React.FC = () => {
   return (
     <Layout>
-      {/* TODO:: add more info */}
-      <Seo title="Citation Style List" />
+      <Seo title="Supported Citation Style List" />
       <Box
         sx={{
           bgcolor: "background.paper",
