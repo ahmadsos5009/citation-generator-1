@@ -4,7 +4,7 @@ module.exports = {
     title: "Citation Generator",
     description: "Create Citation based on Csl_code styles",
     author: "Ahmad Souqi",
-    siteUrl: process.env.APP_URL,
+    siteUrl: "https://citation-creator.com",
   },
   plugins: [
     "gatsby-plugin-cname",
